@@ -16,7 +16,7 @@ users = db.users
 users.create_index([("username", ASCENDING)], unique=True)
 
 #de aici punem functiile pentru backend, tudor nu modifici ce e mai sus si mai jos de acest comentariu, mai poti adauga librarii
-
+#acesta este un comentariu de test
 
 
 
