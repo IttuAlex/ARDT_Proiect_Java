@@ -7,7 +7,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="navbar-logo">MAZI Coffee</div>
+      <div className="navbar-logo"></div>
 
       {/* Buton hamburger */}
       <button className={`burger ${open ? "open" : ""}`} onClick={toggleMenu}>
