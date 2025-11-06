@@ -1,23 +1,17 @@
-import { useState } from 'react'
-import {BrowserRouter, Routes, Route} from "react-router-dom";
-import Home from './pages/Home.jsx';
-import Navbar from './components/Navbar.jsx';
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home.jsx";
+import Socials from "./pages/Social.jsx";
+import Navbar from "./components/Navbar.jsx";
+import "./App.css";
 
-function App() {
-  
+export default function App() {
   return (
-    
-    <>
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-
+        <Route path="/socials" element={<Socials />} />
       </Routes>
     </BrowserRouter>
-
-    </>
-  )
+  );
 }
-
-export default App
