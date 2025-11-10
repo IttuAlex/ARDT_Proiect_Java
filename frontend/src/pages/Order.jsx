@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "./Order.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Cart from "./Cart";
+import "./Cart.css";
 
 import cafea2 from "../images/cafea2.png";
 import cafea1 from "../images/cafea1.png";
@@ -18,12 +21,24 @@ const products = [
 ];
 
 const Order = () => {
+    const [isCartOpen, setIsCartOpen] = useState(false);
+
+    const handleOpenCart = () => {
+      setIsCartOpen(true);
+    };
+
+    const handleCloseCart = () => {
+      setIsCartOpen(false);
+    };
+
   return (
-    <div className="order-page">
+    <>
+    <div className={isCartOpen ? "order-page blurred" : "order-page"}>
       <h1 className="order-header">Order</h1>
-      <div className="cart-icon">
-        <FaShoppingCart />
-      </div>
+
+     <div className="cart-icon" onClick={handleOpenCart}>  
+        <FaShoppingCart/>    
+     </div>
 
       <section className="order-list">
         {products.map(p => (
@@ -37,6 +52,12 @@ const Order = () => {
         ))}
       </section>
     </div>
+
+      <Footer />
+
+      {isCartOpen && <Cart onClose={handleCloseCart}/>}
+
+    </>
   );
 };
 
