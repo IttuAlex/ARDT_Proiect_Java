@@ -5,21 +5,41 @@
   right: 0;
   display: flex;
   align-items: center;
-  background-color: #9e7b1c;
-  color: white;
-  padding: 12px 24px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  background-color: #e382c4;
+  color: rgb(163, 65, 65);
+  padding: 8px 24px;
   z-index: 1000;
 }
 
 .navbar-logo {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 20px;
+  text-decoration: none;
+  color: inherit;
+  line-height: 0; 
+  font-size: 1.4rem;
   font-weight: bold;
   letter-spacing: 0.5px;
-  margin-right: 2px;
-  /*content: url("/src/images/LOGO.png");*/
 }
 
-/* Meniul principal – desktop */
+.navbar-logo img {
+  height: 70px;       
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.navbar-logo:hover {
+  opacity: 0.7;
+}
+
+.navbar-logo:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
 .navbar-menu {
   display: flex;
   align-items: center;
@@ -29,8 +49,8 @@
 
 .navbar-menu button {
   background-color: transparent;
-  color: white;
-  border: 2px solid #ffb347;
+  color: rgb(155, 45, 45);
+  border: 1px solid rgb(163, 65, 65);
   border-radius: 6px;
   padding: 8px 18px;
   cursor: pointer;
@@ -38,10 +58,9 @@
   transition: all 0.3s ease;
 }
 
-/* Login împins la dreapta */
 .login-btn {
   background-color: #3b82f6;
-  color: white;
+  color: rgb(163, 65, 65);
   border: none;
   border-radius: 8px;
   padding: 8px 18px;
@@ -49,13 +68,13 @@
 }
 
 .navbar-menu button:hover {
-  background-color: #ffb347;
-  color: #222;
+  background-color: rgb(163, 65, 65);
+  color: #e382c4;
   transform: scale(1.05);
 }
 
 .login-btn:hover {
-  background-color: #2563eb;
+  background-color: #650d0d;
   transform: scale(1.05);
 }
 
@@ -89,6 +108,8 @@
   transform: translateY(-7px) rotate(-45deg);
 }
 
+
+
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
   .navbar {
@@ -104,7 +125,7 @@
     height: 100vh;
     width: 70%;
     max-width: 260px;
-    background-color: #9e7b1c;
+    background-color: #e382c4;
     box-shadow: -2px 0 8px rgba(0,0,0,0.4);
     flex-direction: column;
     align-items: flex-start;
