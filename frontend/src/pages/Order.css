@@ -18,14 +18,14 @@
   top: 130px;
   left: 95%;
   font-size: 1.8rem;
-  color: rgb(163, 65, 65);
+  color: #cc8d5a ;
   cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .cart-icon:hover {
   transform: scale(1.15);
-  color: #e382c4;
+  color: #e9a166;
 }
 
 .order-list {
@@ -39,7 +39,7 @@
 }
 
 .order-card {
-  background: #e382c4;
+  background: #cc8d5a;
   border-radius: 12px;
   padding: 8px;
   display: flex;
@@ -91,7 +91,7 @@
 .order-ingredients {
   margin-top: 0;                 
   font-size: 0.9rem;
-  color: rgb(163, 65, 65);
+  color: #f7d172;
   max-height: 0;                 
   opacity: 0;
   overflow: hidden;              
