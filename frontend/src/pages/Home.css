@@ -1,16 +1,15 @@
 body {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Georgia', serif;
   background-image: url("src/images/background.jpeg");
   background-position: center;
   background-size: cover;
-  color: white;
+  color: rgb(163, 65, 65);
   text-align: center;
   margin: 0;
   padding: 0;
 }
 
 header {
-  background-color: #9e7b1c;
   padding: 20px;
 }
 
@@ -44,8 +43,8 @@ h1, h2 {
 }
 
 footer {
-  background-color: #9e7b1c;
-  color: white;
+  background-color: #e382c4;
+  color: rgb(163, 65, 65);
   padding: 10px;
   position: fixed;
   width: 100%;

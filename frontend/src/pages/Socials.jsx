@@ -1,7 +1,9 @@
 import React from "react";
 import { FaInstagram, FaTiktok, FaFacebook } from "react-icons/fa";
-import "./Social.css";
-import Navbar from "../components/Navbar";
+import "./Socials.css";
+import Navbar from "../components/Navbar.jsx";
+import Footer from "../components/Footer.jsx";
+
 
 export default function Socials() {
   return (
@@ -85,9 +87,7 @@ export default function Socials() {
 
 
 
-      <footer>
-        <p>&copy; 2025 MAZI Coffee</p>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -17,7 +17,6 @@
   min-height: 80vh;          /* ca să umple vizual pagina pe înălțime */
   margin: 6rem auto 3rem;    /* puțin mai jos sub navbar */
   padding: 4rem 3rem;        /* mai mult spațiu interior */
-  background: rgba(255, 255, 255, 0.9); /* alb mai opac */
   border-radius: 20px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   text-align: center;
@@ -28,7 +27,7 @@
 .socials-page h1 {
   margin: 0 0 1rem;
   line-height: 1.2;
-  color: #9e7b1c;
+  color: rgb(163, 65, 65);
   font-style: italic;
   font-size: 2.5rem;
 }
@@ -83,7 +82,7 @@
   font-size: 1.3rem;
   font-weight: bold;
   text-decoration: none;
-  color: #9e7b1c;
+  color: rgb(163, 65, 65);
   margin-bottom: 10px;
   transition: color 0.3s ease;
 }
@@ -217,19 +216,10 @@
 
 /* === FOOTER === */
 footer {
-  background-color: #9e7b1c;
-  color: white;
+  background-color: #e382c4;
+  color: rgb(163, 65, 65);
   padding: 10px;
-  position: fixed;
+  position: center;
   width: 100%;
   bottom: 0;
-}
-
-
-/* === NAVBAR VIZIBIL PESTE TOT === */
-.navbar {
-  position: fixed;  /* sau fixed, dacă preferi permanent sus */
-  top: 0;
-  z-index: 1000;
-  background-color: #9e7b1c;
 }
