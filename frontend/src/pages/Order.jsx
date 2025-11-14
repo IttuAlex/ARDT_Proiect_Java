@@ -77,8 +77,24 @@ const Order = () => {
     };
 
     const handleRemoveFromCart = (itemId) => {
+        const itemToRemove = cartItems.find(item => item.id === itemId);
+
       setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
-    }
+
+      if(itemToRemove)
+        toast.error(`${itemToRemove.name} sters din cos!`,{
+            position:"bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+
+
+        });
+      
+    };
 
   return (
     <>
