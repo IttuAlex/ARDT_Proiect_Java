@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "./Order.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -60,6 +62,18 @@ const Order = () => {
         };
        setCartItems(prevItems => [...prevItems, newItem]);
 
+       toast.success(`${product.name} adaugat in cos!`, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+
+
+       });
+
     };
 
     const handleRemoveFromCart = (itemId) => {
@@ -72,7 +86,7 @@ const Order = () => {
       <h1 className="order-header">Order</h1>
 
      <div className="cart-icon" onClick={handleOpenCart}>  
-        <FaShoppingCart/>    
+        <FaShoppingCart/> 
      </div>
 
       <section className="order-list">
@@ -88,6 +102,14 @@ const Order = () => {
         ))}
       </section>
     </div>
+
+        <ToastContainer
+        position="bottom-right"
+        autoClose={300}
+        pauseOnFocusLoss={false}
+
+
+        />
 
       <Footer />
 
