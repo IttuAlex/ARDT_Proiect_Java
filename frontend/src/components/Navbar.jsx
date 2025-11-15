@@ -11,7 +11,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <a href="/" className="navbar-logo" aria-label="MAZI Coffee – Home">
+      <a href="/home" className="navbar-logo" aria-label="MAZI Coffee – Home">
         <img src={logo} alt="MAZI Coffee logo" />
       </a>
 
@@ -24,10 +24,10 @@ const Navbar = () => {
 
       {/* Meniul – folosit și pentru desktop și pentru mobil */}
       <div className={`navbar-menu ${open ? "show" : ""}`}>
+        <button onClick={() => navigate("/home")}>Home</button>
         <button onClick={() => navigate("/order")}>Order</button>
-        <button>Menu</button>
         <button onClick={() => navigate("/socials")}>Socials</button>
-        <button>About Us</button>
+        <button onClick={() => navigate("/about")}>About</button>
         <button className="login-btn">Login</button>
       </div>
     </nav>

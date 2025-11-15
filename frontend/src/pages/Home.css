@@ -10,7 +10,64 @@ body {
 }
 
 header {
-  padding: 20px;
+  padding-right: 400px;
+  transform: translateY(-475px);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f7d172;
+  width: fit-content;
+  margin: 100px auto 0;
+  -webkit-text-stroke: 2px #cc8d5a;
+}
+
+.gallery {
+  padding-top: 100px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 2rem;
+  padding-right: 100px;
+}
+
+.gallery {
+  padding-top: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.gallery a {
+  display: block;
+  --tx: 0px;
+  --ty: 0px;
+  transform: translate(var(--tx), var(--ty));
+  transition: transform 0.2s ease;
+}
+
+.gallery a img {
+  width: auto;
+  border-radius: 16px;
+  display: block;
+}
+
+.gallery a:nth-child(1) {
+  --tx: 1250px;
+  --ty: 70px;
+}
+
+.gallery a:nth-child(2) {
+  --tx: 735px;
+  --ty: -50px;
+}
+
+.gallery a:nth-child(3) {
+  --tx: 200px;
+  --ty: 100px;
+}
+
+.gallery a:hover {
+  transform: translate(var(--tx), var(--ty)) scale(1.05);
 }
 
 h1, h2 {
@@ -23,6 +80,36 @@ h1, h2 {
   top: 0px;
   border-radius: 20px;
   padding: 20px;
+}
+
+.paragraf {
+  font-size: 2.5rem;
+  margin: 10px;
+  color: #f7d172;
+  -webkit-text-stroke: 0.83px #cc8d5a;
+  position: fixed;
+  top: 200px;
+  left: 10px;
+  width: 60%;
+  height: 150px;
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 0px;
+}
+
+.paragraf2{
+  font-size: 2.5rem;
+  margin: 10px;
+  color: #f7d172;
+  -webkit-text-stroke: 0.83px #cc8d5a;
+  position: fixed;
+  top: 270px;
+  left: 30px;
+  width: 60%;
+  height: 150px;
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 0px;
 }
 
 #order { right: 250px; }
@@ -42,11 +129,29 @@ h1, h2 {
   padding: 20px;
 }
 
-footer {
-  background-color: #cc8d5a;
-  color: rgb(163, 65, 65);
-  padding: 10px;
+.heart-btn {
   position: fixed;
-  width: 100%;
-  bottom: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 2rem;
+  left: 17%;
+  top: 55%;
+}
+
+.heart-btn svg {
+  font-size: 2.2rem;
+  color: #cc8d5a;
+  transition: transform 0.2s ease;
+  border: 2px solid #cc8d5a; 
+  border-radius: 50%;
+  padding: 8px;
+  transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.heart-btn:hover svg {
+  transform: scale(1.1);
+  color: #f3d383;
+  border-color: #f3d383;
 }

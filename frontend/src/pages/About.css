@@ -1,0 +1,55 @@
+.about-page {
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center;   
+  color: #cc8d5a;
+}
+
+.about-page h1 {
+  position: fixed;
+  left:43%;
+  top: 7%;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #f7d172;
+  width: fit-content;
+  margin: 100px auto 0;
+  -webkit-text-stroke: 2px #cc8d5a;
+}
+
+.about-page p {
+   background: rgba(165, 147, 81, 0.4);
+  border-radius: 15px;
+  font-size: 1.05rem;
+  position: fixed;
+  top: 40%;
+  left: 18%;
+  line-height: 1.8;
+  text-align: left;
+  margin: 0;
+}
+
+/* opțional: spațiu mai mare între ultimul rând și margine */
+.about-page p br {
+  line-height: 2;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  .about-page {
+    margin: 6rem 1.5rem 3rem;
+    padding: 2rem 1.5rem;
+  }
+
+  .about-page h1 {
+    font-size: 2rem;
+  }
+
+  .about-page p {
+    font-size: 0.95rem;
+  }
+}
