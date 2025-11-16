@@ -66,8 +66,30 @@ def login():
     token = access_token(str(email_check["_id"]), email_check["email"], email_check.get("roles", []))
     return jsonify({"token": token, "user": {"email": email_check["email"], "roles": email_check.get("roles", [])}})
 
+@app.get("/api/me")
+def get_me(current_user):
+    try:
+        user_id = current_user.get("sub")
+        
+        if not user_id:
+            return jsonify({"error": "Payload invalid"}), 400
+        
+        user = users.find_one({"_id": ObjectId(user_id)})
+
+        if not user:
+            return jsonify({"error": "Userul din token nu a fost gasit"}), 404
+        
+        return jsonify({
+            "id": str(user["_id"]),
+            "email": user["email"],
+            "roles": user.get("roles", [])
 
 
+        }), 200
+
+    except Exception as e:
+        app.logger.error(f"Eroare la /api/me: {e}")
+        return jsonify({"error": "Eroare la preluarea datelor userului"}), 500
 
 
 if __name__ == '__main__':
