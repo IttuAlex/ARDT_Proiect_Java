@@ -5,6 +5,8 @@ import Order from "./pages/Order.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Cart from "./pages/Cart.jsx";
 import About from "./pages/About.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
 import "./App.css";
 
 export default function App() {
@@ -18,6 +20,8 @@ export default function App() {
         <Route path="/order" element={<Order />} />
         <Route path="/cart" element={<Cart/>}/>
         <Route path="/about" element={<About/>}/>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/register" element={<Register/>}/>
       </Routes>
     </BrowserRouter>
   );
