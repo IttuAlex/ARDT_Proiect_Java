@@ -96,6 +96,17 @@ const Order = () => {
       
     };
 
+    const handleOrderSuccess = () => {
+      setCartItems([]);
+
+      toast.success("Comanda a fost plasata cu succes!", {
+        position: "bottom-right",
+        autoClose: 3000,
+      });
+
+
+    };
+
   return (
     <>
     <div className={isCartOpen ? "order-page blurred" : "order-page"}>
@@ -129,7 +140,7 @@ const Order = () => {
 
       <Footer />
 
-      {isCartOpen && <Cart onClose={handleCloseCart} cartItems={cartItems} onRemoveItem={handleRemoveFromCart}/>}
+      {isCartOpen && <Cart onClose={handleCloseCart} cartItems={cartItems} onRemoveItem={handleRemoveFromCart} onOrderSuccess={handleOrderSuccess}/>}
 
     </>
   );
