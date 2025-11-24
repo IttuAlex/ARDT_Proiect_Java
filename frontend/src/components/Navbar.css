@@ -58,8 +58,17 @@
   transition: all 0.3s ease;
 }
 
+.navbar-menu button:hover {
+  border-color: #e9a166;
+  color: #e9a166;
+  background-color: #f7d172;
+  transform: scale(1.05);
+  outline: none;
+  box-shadow: none
+}
+
 .login-btn {
-  background-color: #3b82f6;
+  background-color: #e9a166;
   color: #f7d172;
   border: none;
   border-radius: 8px;
@@ -67,18 +76,11 @@
   margin-left: auto;
 }
 
-.navbar-menu button:hover {
-  background-color: #e9a166;
-  color: #cc8d5a
-  transform scale(1.05);
-}
-
 .login-btn:hover {
   background-color: #f7d172;
   transform: scale(1.05);
 }
 
-/* buton hamburger */
 .burger {
   display: none;
   flex-direction: column;
@@ -87,6 +89,7 @@
   border: none;
   cursor: pointer;
   margin-left: auto;
+  z-index: 1001;
 }
 
 .burger span {
@@ -97,7 +100,6 @@
   transition: all 0.3s ease;
 }
 
-/* animație X */
 .burger.open span:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
 }
@@ -108,17 +110,52 @@
   transform: translateY(-7px) rotate(-45deg);
 }
 
+.user-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px; 
+  margin-left: auto;
+}
 
+.account-btn {
+  background-color: transparent;
+  color:#f7d172;
+  border: 1px solid #f7d172;
+  border-radius: 6px;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
 
-/* ================= MOBILE ================= */
+.account-btn:hover {
+  background-color: #e9a166;
+  transform: scale(1.05);
+}
+
+.logout-btn {
+  background-color: transparent;
+  color:#f7d172;
+  border: 1px solid #f7d172;
+  border-radius: 6px;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #cc8d5a;
+  transform: scale(1.05);
+}
+
 @media (max-width: 768px) {
   .navbar {
     justify-content: space-between;
   }
 
-  /* Ascunde meniul complet inițial */
   .navbar-menu {
-    display: flex; /* pentru a putea fi animat */
+    display: flex;
     position: fixed;
     top: 0;
     right: 0;
@@ -131,34 +168,41 @@
     align-items: flex-start;
     padding: 80px 24px 24px;
     gap: 12px;
-    transform: translateX(100%); /* ascuns complet */
-    opacity: 0;                  /* invizibil */
-    pointer-events: none;        /* nu poți da click pe el */
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
     transition: transform 0.3s ease, opacity 0.3s ease;
     z-index: 999;
   }
 
-  /* Când e activ, devine vizibil */
   .navbar-menu.show {
     transform: translateX(0);
     opacity: 1;
     pointer-events: auto;
   }
 
-  /* Login normal în sidebar */
-  .navbar-menu .login-btn {
-    margin-left: 0;
-    width: 100%;
-    text-align: left;
-  }
-
   .navbar-menu button {
     width: 100%;
     text-align: left;
+    border-color: #cc8d5a;
+    color: #cc8d5a;
   }
 
-  /* Hamburger vizibil pe mobil */
   .burger {
     display: flex;
+  }
+
+  .user-controls {
+    flex-direction: column;
+    width: 100%;
+    margin-left: 0;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .account-btn, .logout-btn {
+    width: 100%;
+    text-align: center;
+    margin: 0;
   }
 }

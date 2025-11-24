@@ -1,3 +1,17 @@
+@import "./App.css";
+
+@import "./components/Navbar.css";
+@import "./components/Footer.css";
+
+@import "./pages/Home.css";
+@import "./pages/About.css";
+@import "./pages/Cart.css";
+@import "./pages/Login.css";
+@import "./pages/Order.css";
+@import "./pages/Socials.css";
+
+
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

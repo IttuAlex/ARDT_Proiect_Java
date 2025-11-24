@@ -11,7 +11,6 @@
   justify-content: center;
   align-items: center;     
   background-color: #f0f2f5;
-  font-family: Arial, sans-serif;
   padding: 1rem;
   box-sizing: border-box;
 }
@@ -52,7 +51,7 @@
 }
 
 .login-error {
-  color: #d93025;
+  color: #7f251e;
   font-size: 0.9rem;
   text-align: left;
   margin-top: -0.75rem;
