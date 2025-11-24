@@ -8,3 +8,5 @@ eventlet==0.33.3
 flask-session==0.4.0
 pyjwt
 python-dotenv
+google-auth
+requests

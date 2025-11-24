@@ -1,17 +1,52 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Login.css";
+import { useGoogleLogin } from "@react-oauth/google";
+import { FcGoogle } from "react-icons/fc";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { FcGoogle } from "react-icons/fc";
+import "./Login.css";
 
 export default function Login() {
-
-  const [email, setEmail] = useState(""); 
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleGoogleSuccess = async (tokenResponse) => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:8000/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: tokenResponse.access_token }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Eroare la autentificare");
+      }
+
+      const data = await response.json();
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      setError("Nu s-a putut efectua autentificarea cu Google.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loginGoogle = useGoogleLogin({
+    onSuccess: handleGoogleSuccess,
+    onError: () => setError("Autentificarea cu Google a eșuat."),
+  });
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -19,7 +54,6 @@ export default function Login() {
     setLoading(true);
 
     try {
-
       const response = await fetch("http://localhost:8000/auth/login", {
         method: "POST",
         headers: {
@@ -27,7 +61,6 @@ export default function Login() {
         },
         body: JSON.stringify({ email, password }),
       });
-
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -40,18 +73,13 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(data.user));
 
       navigate("/");
-
     } catch (err) {
-      console.log("LOGIN ERROR >>>>", err.message);
+      console.log(err.message);
       setError(err.message);
     } finally {
       setLoading(false);
     }
   }
-
-  const handleGoogleLogin = () => {
-    console.log("Se inițiază autentificarea Google...");
-  };
 
   return (
     <div className="login-overlay">
@@ -60,9 +88,9 @@ export default function Login() {
         <h1 className="login-title">Autentificare</h1>
         <form onSubmit={handleSubmit} noValidate>
           <input
-            type="email" 
+            type="email"
             placeholder="Adresă de email"
-            value={email} 
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="login-input"
             required
@@ -91,7 +119,8 @@ export default function Login() {
         <button
           type="button"
           className="google-login-button"
-          onClick={handleGoogleLogin}
+          onClick={() => loginGoogle()}
+          disabled={loading}
         >
           <FcGoogle className="google-icon" />
           Continuă cu Google

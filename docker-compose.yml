@@ -17,11 +17,9 @@ services:
       MONGO_DB: "${MONGO_DB}"
     volumes:
       - ./backend:/app
-    command: ["flask", "run"]
     depends_on:
       mongo:
         condition: service_healthy
-
 
   frontend:
     build:
