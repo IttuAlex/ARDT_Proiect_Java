@@ -7,6 +7,7 @@ import Cart from "./pages/Cart.jsx";
 import About from "./pages/About.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import Account from "./pages/Account.jsx";
 import "./App.css";
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/about" element={<About/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/register" element={<Register/>}/>
+        <Route path="/account" element={<Account/>}/>
       </Routes>
     </BrowserRouter>
   );

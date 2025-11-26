@@ -1,69 +1,75 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Login.css"; // --- REUTILIZĂM ACELAȘI CSS ---
-import Navbar from "../components/Navbar";
-// import Footer from "../components/Footer"; // Dacă ai
+import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
+import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import "./Login.css";
 
 export default function Register() {
-  // --- STATE-URI NOI PENTRU CÂMPURI SUPLIMENTARE ---
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState(""); // Câmp nou
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // Câmp nou
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError(""); // Resetează eroarea
+    setError("");
 
-    // --- VALIDARE CLIENT-SIDE PENTRU PAROLE ---
     if (password !== confirmPassword) {
       setError("Parolele nu se potrivesc.");
-      return; // Oprește trimiterea formularului
+      return;
     }
 
     setLoading(true);
-    try {
-      // --- Aici vei apela funcția ta de 'register' ---
-      // await register(username, email, password);
-      console.log("Se trimit datele de înregistrare:", { username, email, password });
-      
-      // Navighează spre pagina principală (sau spre login) după succes
-      navigate("/");
 
+    try {
+      const response = await fetch("http://localhost:8000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Înregistrare eșuată");
+      }
+
+      const data = await response.json();
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      window.dispatchEvent(new Event("auth-change"));
+
+      toast.success("Cont creat cu succes!");
+      navigate("/");
+      
     } catch (err) {
-      console.log(
-        "REGISTER ERROR >>>>",
-        err?.response?.status,
-        err?.response?.data || err.message
-      );
-      const msg = err?.response?.data?.error || "Înregistrarea a eșuat";
-      setError(msg);
+      console.log(err.message);
+      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
   }
 
-  // Funcția pentru Google rămâne identică
   const handleGoogleLogin = () => {
-    console.log("Se inițiază înregistrarea Google...");
-    alert("Logica Google Auth nu este implementată încă.");
+    alert("Te rugăm să folosești pagina de Login pentru autentificarea cu Google.");
+    navigate("/login");
   };
 
   return (
-    // Reutilizăm aceleași clase CSS ca la Login
-    <div className="login-overlay"> 
+    <div className="login-overlay">
       <Navbar />
       <div className="login-card">
-        {/* --- TITLU SCHIMBAT --- */}
         <h1 className="login-title">Înregistrare</h1>
-
         <form onSubmit={handleSubmit} noValidate>
-          {/* --- CÂMPUL USERNAME (existent) --- */}
           <input
             type="text"
             placeholder="Nume utilizator"
@@ -74,7 +80,6 @@ export default function Register() {
             autoComplete="username"
           />
 
-          {/* --- CÂMP NOU: EMAIL --- */}
           <input
             type="email"
             placeholder="Adresă de email"
@@ -85,7 +90,6 @@ export default function Register() {
             autoComplete="email"
           />
 
-          {/* --- CÂMPUL PAROLĂ (existent) --- */}
           <input
             type="password"
             placeholder="Parolă"
@@ -93,10 +97,9 @@ export default function Register() {
             onChange={(e) => setPassword(e.target.value)}
             className="login-input"
             required
-            autoComplete="new-password" // 'new-password' ajută managerii de parole
+            autoComplete="new-password"
           />
 
-          {/* --- CÂMP NOU: CONFIRMARE PAROLĂ --- */}
           <input
             type="password"
             placeholder="Confirmă parola"
@@ -107,16 +110,13 @@ export default function Register() {
             autoComplete="new-password"
           />
 
-          {/* Afișează eroarea (dacă există, ex. parolele nu se potrivesc) */}
           {error && <p className="login-error">{error}</p>}
 
-          {/* --- TEXT BUTON SCHIMBAT --- */}
           <button type="submit" disabled={loading} className="login-button">
             {loading ? "Se încarcă..." : "Înregistrează-te"}
           </button>
         </form>
 
-        {/* --- Separatorul și butonul Google rămân identice --- */}
         <div className="login-divider">
           <span>SAU</span>
         </div>
@@ -130,7 +130,6 @@ export default function Register() {
           Continuă cu Google
         </button>
 
-        {/* --- LINK NAVIGARE SCHIMBAT --- */}
         <p className="register-text">
           Ai deja cont?{" "}
           <span className="register-link" onClick={() => navigate("/login")}>
@@ -138,7 +137,7 @@ export default function Register() {
           </span>
         </p>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

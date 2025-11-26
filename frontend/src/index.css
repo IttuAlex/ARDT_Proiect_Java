@@ -9,6 +9,7 @@
 @import "./pages/Login.css";
 @import "./pages/Order.css";
 @import "./pages/Socials.css";
+@import "./pages/Account.css";
 
 
 
@@ -40,7 +41,11 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
+  min-height: 100vh;
+  background-image: url("./images/background.jpeg");
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-attachment: fixed !important;
   min-height: 100vh;
 }
 

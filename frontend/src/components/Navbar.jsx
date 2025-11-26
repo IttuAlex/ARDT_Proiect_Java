@@ -1,25 +1,45 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Navbar.css";
 import logo from "../images/LOGO3.png";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const toggleMenu = () => setOpen(prev => !prev);
+  const location = useLocation();
   
+  const toggleMenu = () => setOpen(prev => !prev);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+    const checkUser = () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        try {
+            setUser(JSON.parse(storedUser));
+        } catch (e) {
+            setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    };
+
+    checkUser();
+
+    window.addEventListener("auth-change", checkUser);
+
+    return () => {
+      window.removeEventListener("auth-change", checkUser);
+    };
+  }, [location]); 
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    
+    window.dispatchEvent(new Event("auth-change"));
+    
     setUser(null);
     navigate("/login");
   }
@@ -44,7 +64,10 @@ const Navbar = () => {
         
         {user ? (
             <div className="user-controls">
-                <button className="account-btn" onClick={() => navigate("/account")}>
+                <button 
+                    className="account-btn" 
+                    onClick={() => navigate("/account")}
+                >
                     Account
                 </button>
                 <button 

@@ -1,15 +1,25 @@
-import os, jwt, datetime, requests
+import os, jwt, datetime, requests, smtplib
 from flask import Flask, jsonify, request
 from pymongo import MongoClient, ASCENDING
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson import ObjectId
 from functools import wraps
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+SMTP_EMAIL = "tudorlepirda@gmail.com"
+SMTP_PASSWORD = "vnsy ncdg sopf tkqn"
 
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "admin")
 GOOGLE_CLIENT_ID = "667973662276-clgm0u6d33an3eo94fs1r3dtm14mofmj.apps.googleusercontent.com"
+SMTP_EMAIL = "tudorlepirda@gmail.com"
+SMTP_PASSWORD = "vnsy ncdg sopf tkqn"
 
 CORS(app, resources={r"/*": {"origins": "*"}})
 
@@ -20,12 +30,12 @@ users.create_index([("email", ASCENDING)], unique=True)
 
 orders = db.orders
 
-def access_token(sub: str, email: str, roles: str, minutes=60):
+def access_token(sub: str, email: str, roles: str):
     payload = {
         "sub": sub,
         "email": email,
         "roles": roles,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=minutes),
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30),
         "type": "access"
     }
     return jwt.encode(payload, app.config["SECRET_KEY"], algorithm="HS256")
@@ -39,12 +49,12 @@ def token_required(f):
         token_header = request.headers.get('Authorization')
         
         if not token_header:
-            return jsonify({"error": "Token-ul de autorizare lipsește"}), 401
+            return jsonify({"error": "Lipseste token-ul de autorizare"}), 401
 
         try:
             parts = token_header.split()
             if parts[0].lower() != 'bearer' or len(parts) != 2:
-                raise jwt.InvalidTokenError("Formatul token-ului este invalid.")
+                raise jwt.InvalidTokenError("Format invalid")
             
             token = parts[1]
             payload = decode_token(token)
@@ -55,13 +65,37 @@ def token_required(f):
             kwargs['current_user'] = payload 
 
         except jwt.ExpiredSignatureError:
-            return jsonify({"error": "Token-ul a expirat"}), 401
+            return jsonify({"error": "Token expirat"}), 401
         except (jwt.InvalidTokenError, Exception) as e:
             return jsonify({"error": "Token invalid", "details": str(e)}), 401
         
         return f(*args, **kwargs)
     
     return decorated_function
+
+def send_reset_email(to_email, token):
+    try:
+        msg = MIMEMultipart()
+        msg['From'] = SMTP_EMAIL
+        msg['To'] = to_email
+        msg['Subject'] = "Resetare Parola"
+
+        link = f"http://localhost:5173/login?token={token}"
+        
+        body = f"Salut,\n\nAm primit o cerere de resetare a parolei pentru contul tau.\n\nDa click pe link-ul de mai jos pentru a seta o parola noua:\n{link}\n\nDaca nu ai cerut acest lucru, ignora mesajul."
+        
+        msg.attach(MIMEText(body, 'plain'))
+
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(SMTP_EMAIL, SMTP_PASSWORD)
+        text = msg.as_string()
+        server.sendmail(SMTP_EMAIL, to_email, text)
+        server.quit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 @app.post("/auth/register")
 def register():
@@ -70,18 +104,33 @@ def register():
     password = data.get("password") or ""
 
     if not email or not password:
-        return jsonify({"error": "email and password are required"}), 400
+        return jsonify({"error": "Date incomplete"}), 400
     
     try:
-        users.insert_one({
+        new_user = {
             "email": email,
             "password": generate_password_hash(password),
             "roles": ["user"],
             "register_time": datetime.datetime.utcnow()
-        })
-    except Exception:
-        return jsonify({"error": "email already used"}), 409
-    return jsonify({"message": "register done"}), 201
+        }
+        result = users.insert_one(new_user)
+        
+        user = users.find_one({"_id": result.inserted_id})
+        token = access_token(str(user["_id"]), user["email"], user.get("roles", []))
+        
+        return jsonify({
+            "message": "Inregistrare reusita",
+            "token": token,
+            "user": {
+                "email": user["email"],
+                "roles": user.get("roles", [])
+            }
+        }), 201
+
+    except Exception as e:
+        if "duplicate key error" in str(e):
+             return jsonify({"error": "Email deja existent"}), 409
+        return jsonify({"error": str(e)}), 500
 
 @app.post("/auth/login")
 def login():
@@ -89,13 +138,26 @@ def login():
     email = data.get("email") or ""
     password = data.get("password") or ""
 
-    email_check = users.find_one({"email": email})
+    user = users.find_one({"email": email})
 
-    if not email_check or not check_password_hash(email_check["password"], password):
-        return jsonify({"error": "invalid email or password"}), 401
+    if not user:
+        return jsonify({"error": "Date incorecte"}), 401
+        
+    if user["password"].startswith("google_auth_user"):
+         return jsonify({"error": "Acest cont foloseste Google Login"}), 401
+
+    if not check_password_hash(user["password"], password):
+        return jsonify({"error": "Date incorecte"}), 401
     
-    token = access_token(str(email_check["_id"]), email_check["email"], email_check.get("roles", []))
-    return jsonify({"token": token, "user": {"email": email_check["email"], "roles": email_check.get("roles", [])}})
+    token = access_token(str(user["_id"]), user["email"], user.get("roles", []))
+    
+    return jsonify({
+        "token": token, 
+        "user": {
+            "email": user["email"], 
+            "roles": user.get("roles", [])
+        }
+    })
 
 @app.post("/auth/google")
 def google_auth():
@@ -141,6 +203,54 @@ def google_auth():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.post("/auth/forgot-password")
+def forgot_password():
+    data = request.get_json(silent=True) or {}
+    email = data.get("email")
+
+    user = users.find_one({"email": email})
+    
+    if user:
+        reset_token = jwt.encode({
+            "sub": str(user["_id"]),
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=15),
+            "type": "reset"
+        }, app.config["SECRET_KEY"], algorithm="HS256")
+
+        send_reset_email(email, reset_token)
+
+    return jsonify({"message": "Email trimis daca exista contul"}), 200
+
+@app.post("/auth/reset-password")
+def reset_password():
+    data = request.get_json(silent=True) or {}
+    token = data.get("token")
+    new_password = data.get("password")
+
+    if not token or not new_password:
+        return jsonify({"error": "Date incomplete"}), 400
+
+    try:
+        payload = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
+        
+        if payload.get("type") != "reset":
+            return jsonify({"error": "Token invalid"}), 400
+
+        user_id = payload.get("sub")
+        
+        hashed_password = generate_password_hash(new_password)
+        users.update_one(
+            {"_id": ObjectId(user_id)}, 
+            {"$set": {"password": hashed_password}}
+        )
+
+        return jsonify({"message": "Parola schimbata"}), 200
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({"error": "Link expirat"}), 400
+    except Exception:
+        return jsonify({"error": "Token invalid"}), 400
+
 @app.get("/api/me")
 @token_required
 def get_me(current_user):
@@ -153,7 +263,7 @@ def get_me(current_user):
         user = users.find_one({"_id": ObjectId(user_id)})
 
         if not user:
-            return jsonify({"error": "Userul nu a fost gasit"}), 404
+            return jsonify({"error": "User inexistent"}), 404
         
         return jsonify({
             "id": str(user["_id"]),
@@ -162,7 +272,6 @@ def get_me(current_user):
         }), 200
 
     except Exception as e:
-        app.logger.error(f"Eroare la /api/me: {e}")
         return jsonify({"error": "Eroare server"}), 500
 
 @app.post("/api/orders")
@@ -177,10 +286,10 @@ def create_order(current_user):
         total_price = data.get("total_price")
 
         if not items or not total_price:
-            return jsonify({"error": "items si total_price required"}), 400
+            return jsonify({"error": "Date incomplete"}), 400
         
         if not isinstance(items, list):
-            return jsonify({"error": "items trebuie sa fie lista"}), 400
+            return jsonify({"error": "Items trebuie sa fie lista"}), 400
         
         user_id = current_user.get("sub")
 
@@ -199,8 +308,7 @@ def create_order(current_user):
             "order_id": str(result.inserted_id)
         }), 201
     except Exception as e:
-        app.logger.error(f"Eroare la /api/orders: {e}")
-        return jsonify({"error": "Eroare la crearea comenzii"}), 500
+        return jsonify({"error": "Eroare comanda"}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
