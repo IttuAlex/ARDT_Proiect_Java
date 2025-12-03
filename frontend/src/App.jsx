@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Link, Navigate} from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Home from "./pages/Home.jsx";
 import Socials from "./pages/Socials.jsx";
 import Order from "./pages/Order.jsx";
@@ -14,6 +16,19 @@ export default function App() {
   return (
     <BrowserRouter>
       <Navbar />
+      <ToastContainer 
+        position="bottom-left"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        style={{ zIndex: 99999 }} 
+      />
       <Routes>
         <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<Home />} />

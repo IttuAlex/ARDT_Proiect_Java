@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {ToastContainer, toast} from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./Order.css";
 import Navbar from "../components/Navbar";
@@ -42,8 +42,23 @@ const products = [
 
 const Order = () => {
     const [isCartOpen, setIsCartOpen] = useState(false);
-
     const [cartItems, setCartItems] = useState([]);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const checkUser = () => {
+            const storedUser = localStorage.getItem("user");
+            if (storedUser) {
+                setUser(JSON.parse(storedUser));
+            } else {
+                setUser(null);
+            }
+        };
+
+        checkUser();
+        window.addEventListener("auth-change", checkUser);
+        return () => window.removeEventListener("auth-change", checkUser);
+    }, []);
 
     const handleOpenCart = () => {
       setIsCartOpen(true);
@@ -58,11 +73,10 @@ const Order = () => {
           name: product.name,
           price: product.price,
           id: Date.now()
-
         };
-       setCartItems(prevItems => [...prevItems, newItem]);
+        setCartItems(prevItems => [...prevItems, newItem]);
 
-       toast.success(`${product.name} adaugat in cos!`, {
+        toast.success(`${product.name} adaugat in cos!`, {
           position: "bottom-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -70,19 +84,15 @@ const Order = () => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-
-
-       });
-
+        });
     };
 
     const handleRemoveFromCart = (itemId) => {
         const itemToRemove = cartItems.find(item => item.id === itemId);
+        setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
 
-      setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
-
-      if(itemToRemove)
-        toast.error(`${itemToRemove.name} sters din cos!`,{
+        if(itemToRemove)
+          toast.error(`${itemToRemove.name} sters din cos!`,{
             position:"bottom-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -90,21 +100,15 @@ const Order = () => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-
-
-        });
-      
+          });
     };
 
     const handleOrderSuccess = () => {
       setCartItems([]);
-
       toast.success("Comanda a fost plasata cu succes!", {
         position: "bottom-right",
         autoClose: 3000,
       });
-
-
     };
 
   return (
@@ -112,7 +116,7 @@ const Order = () => {
     <div className={isCartOpen ? "order-page blurred" : "order-page"}>
       <h1 className="order-header">Order</h1>
 
-     <div className="cart-icon" onClick={handleOpenCart}>  
+     <div className={`cart-icon ${user ? "logged-in" : ""}`} onClick={handleOpenCart}>  
         <FaShoppingCart/> 
      </div>
 
@@ -130,17 +134,15 @@ const Order = () => {
       </section>
     </div>
 
-        <ToastContainer
+    <ToastContainer
         position="bottom-right"
         autoClose={300}
         pauseOnFocusLoss={false}
+    />
 
+    <Footer />
 
-        />
-
-      <Footer />
-
-      {isCartOpen && <Cart onClose={handleCloseCart} cartItems={cartItems} onRemoveItem={handleRemoveFromCart} onOrderSuccess={handleOrderSuccess}/>}
+    {isCartOpen && <Cart onClose={handleCloseCart} cartItems={cartItems} onRemoveItem={handleRemoveFromCart} onOrderSuccess={handleOrderSuccess}/>}
 
     </>
   );

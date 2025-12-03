@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 import "./Navbar.css";
 import logo from "../images/LOGO3.png";
 
@@ -7,7 +8,14 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 4000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  };
   const toggleMenu = () => setOpen(prev => !prev);
   const [user, setUser] = useState(null);
 
@@ -37,6 +45,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    toast.info("Te-ai deconectat cu succes.", toastOptions);
     
     window.dispatchEvent(new Event("auth-change"));
     

@@ -18,12 +18,17 @@
 .cart-icon {
   position: fixed;
   top: 25px;
-  left: 82%;
+  left: 89%;
   font-size: 1.8rem;
   z-index: 1000;
   color: #f7d172;
   cursor: pointer;
-  transition: transform 0.2s ease, color 0.2s ease;
+  transition: all 0.3s ease;
+}
+
+.cart-icon.logged-in {
+  left: 82%;
+  top: 25px;
 }
 
 .cart-icon:hover {

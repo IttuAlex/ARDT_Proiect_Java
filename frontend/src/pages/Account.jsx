@@ -1,18 +1,20 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import "./Account.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import "./Account.css";
 
 export default function Account() {
-    const navigate = useNavigate();
     return (
-        <div className="account">
+        <div className="account-page-wrapper">
             <Navbar />
+            
+            <main className="account-main-content">
+                <div className="account-header-section">
+                    <h1>My Account</h1>
+                </div>
+            </main>
+
             <Footer />
-            <header>
-                <h1>My Account</h1>
-            </header>
         </div>
     )
 }

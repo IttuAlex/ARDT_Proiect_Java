@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import { FcGoogle } from "react-icons/fc";
@@ -21,6 +21,15 @@ export default function Login() {
   const [searchParams] = useSearchParams();
   const resetToken = searchParams.get("token");
 
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 4000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  };
+
   const handleGoogleSuccess = async (tokenResponse) => {
     setLoading(true);
     try {
@@ -40,11 +49,10 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(data.user));
       window.dispatchEvent(new Event("auth-change"));
 
-      toast.success(`Autentificare reușită! Bine ai venit, ${data.user.email}`);
+      toast.success(`Autentificare reușită! Bine ai venit, ${data.user.email}`, toastOptions);
       navigate("/");
     } catch (err) {
-      setError("Nu s-a putut efectua autentificarea cu Google.");
-      toast.error("Nu s-a putut efectua autentificarea cu Google.");
+      toast.error("Nu s-a putut efectua autentificarea cu Google.", toastOptions);
     } finally {
       setLoading(false);
     }
@@ -52,7 +60,7 @@ export default function Login() {
 
   const loginGoogle = useGoogleLogin({
     onSuccess: handleGoogleSuccess,
-    onError: () => toast.error("Eroare Google Login"),
+    onError: () => toast.error("Eroare Google Login", toastOptions),
   });
 
   async function handleLogin(e) {
@@ -79,11 +87,10 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(data.user));
       window.dispatchEvent(new Event("auth-change"));
 
-      toast.success("Autentificare reușită!");
+      toast.success("Autentificare reușită!", toastOptions);
       navigate("/");
     } catch (err) {
-      setError(err.message);
-      toast.error(err.message);
+      toast.error(err.message, toastOptions);
     } finally {
       setLoading(false);
     }
@@ -91,7 +98,7 @@ export default function Login() {
 
   async function handleRecoverPassword() {
     if (!email) {
-      toast.error("Introdu adresa de email mai sus!");
+      toast.error("Introdu adresa de email mai sus!", toastOptions);
       return;
     }
     
@@ -102,11 +109,11 @@ export default function Login() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      toast.info("📩 Ți-am trimis un email cu linkul de resetare.");
+      toast.info("Ți-am trimis un email cu linkul de resetare.", toastOptions);
       setShowRecovery(false);
       setError("");
     } catch (err) {
-      toast.error("Eroare la trimiterea emailului.");
+      toast.error("Eroare la trimiterea emailului.", toastOptions);
     } finally {
       setLoading(false);
     }
@@ -115,7 +122,7 @@ export default function Login() {
   async function handleResetPassword(e) {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      toast.error("Parolele nu coincid");
+      toast.error("Parolele nu coincid", toastOptions);
       return;
     }
 
@@ -129,11 +136,11 @@ export default function Login() {
 
       if (!response.ok) throw new Error("Link invalid sau expirat");
 
-      toast.success("Parolă schimbată! Te rugăm să te loghezi.");
+      toast.success("Parolă schimbată! Te rugăm să te loghezi.", toastOptions);
       navigate("/login"); 
       window.location.reload(); 
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.message, toastOptions);
     } finally {
       setLoading(false);
     }
