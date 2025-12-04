@@ -4,151 +4,180 @@ body {
   text-align: center;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
-  padding-right: 400px;
-  transform: translateY(-475px);
-  font-size: 1rem;
-  font-weight: 600;
-  color: #f7d172;
-  width: fit-content;
-  margin: 100px auto 0;
+  
+  width: 100%;
+  padding: 2rem 0;
+  margin-top: 80px;
+  text-align: center;
   -webkit-text-stroke: 2px #cc8d5a;
 }
 
-.gallery {
-  padding-top: 100px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  gap: 2rem;
-  padding-right: 100px;
-}
-
-.gallery {
-  padding-top: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 2rem;
-}
-
-.gallery a {
-  display: block;
-  --tx: 0px;
-  --ty: 0px;
-  transform: translate(var(--tx), var(--ty));
-  transition: transform 0.2s ease;
-}
-
-.gallery a img {
-  width: auto;
-  border-radius: 16px;
-  display: block;
-}
-
-.gallery a:nth-child(1) {
-  --tx: 1250px;
-  --ty: 70px;
-}
-
-.gallery a:nth-child(2) {
-  --tx: 735px;
-  --ty: -50px;
-}
-
-.gallery a:nth-child(3) {
-  --tx: 200px;
-  --ty: 100px;
-}
-
-.gallery a:hover {
-  transform: translate(var(--tx), var(--ty)) scale(1.05);
-}
-
 h1, h2 {
-  font-style: italic;
+  font-size: 3.5rem;
+  font-weight: 600;
+  color: #f7d172;
+  margin: 0;
+  -webkit-text-stroke: 2px #cc8d5a;
+  letter-spacing: 2px;
 }
 
-#order, #menu, #socials, #about {
-  margin: 10px;
-  position: fixed;
-  top: 0px;
-  border-radius: 20px;
-  padding: 20px;
+.main-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 5%; /* 5% padding lateral pentru a nu lipi de margini */
+  max-width: 1600px;
+  margin: 0 auto; /* Centrează tot conținutul pe ecrane mari */
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 60vh;
+}
+
+/* --- SECȚIUNEA DE TEXT (Stânga) --- */
+.text-section {
+  flex: 1; /* Ocupă spațiul disponibil */
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 600px; /* Să nu fie textul prea lung pe orizontală */
 }
 
 .paragraf {
-  font-size: 2.5rem;
-  margin: 10px;
+  font-size: 2rem;
   color: #f7d172;
-  -webkit-text-stroke: 0.83px #cc8d5a;
-  position: fixed;
-  top: 200px;
-  left: 10px;
-  width: 60%;
-  height: 150px;
-  border-radius: 20px;
-  padding: 20px;
-  margin-top: 0px;
-}
-
-.paragraf2{
-  font-size: 2.5rem;
-  margin: 10px;
-  color: #f7d172;
-  -webkit-text-stroke: 0.83px #cc8d5a;
-  position: fixed;
-  top: 270px;
-  left: 30px;
-  width: 60%;
-  height: 150px;
-  border-radius: 20px;
-  padding: 20px;
-  margin-top: 0px;
-}
-
-#order { right: 250px; }
-#menu { right: 170px; }
-#socials { right: 85px; }
-#about { right: -15px; }
-
-#content {
-  margin: 10px;
-  color: black;
-  position: fixed;
-  top: 300px;
-  left: 100px;
-  width: 80%;
-  height: 70%;
-  border-radius: 20px;
-  padding: 20px;
+  -webkit-text-stroke: 0.8px #cc8d5a;
+  line-height: 1.4;
+  margin: 0;
 }
 
 .heart-btn {
-  position: fixed;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0;
-  margin-top: 2rem;
-  left: 17%;
-  top: 55%;
+  padding: 10px 0;
+  width: fit-content;
 }
 
 .heart-btn svg {
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   color: #cc8d5a;
-  transition: transform 0.2s ease;
   border: 2px solid #cc8d5a; 
   border-radius: 50%;
-  padding: 8px;
-  transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  padding: 12px;
+  transition: all 0.3s ease;
 }
 
 .heart-btn:hover svg {
   transform: scale(1.1);
   color: #f3d383;
   border-color: #f3d383;
+}
+
+/* --- GALERIE (Dreapta) --- */
+.gallery {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  height: 400px; /* Înălțime fixă pentru a aranja imaginile */
+}
+
+.gallery a {
+  display: block;
+  transition: transform 0.3s ease;
+  position: relative;
+  /* Eliminăm translate-urile uriașe și folosim poziționare relativă */
+}
+
+.gallery a img {
+  width: 250px; /* Lățime controlată */
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  display: block;
+}
+
+/* Aranjare estetică tip "evantai" */
+.gallery a:nth-child(1) {
+  transform: rotate(-10deg) translateY(20px);
+  z-index: 1;
+}
+
+.gallery a:nth-child(2) {
+  transform: scale(1.1) z-index(2);
+  margin: 0 -40px; /* Suprapunere ușoară */
+  z-index: 3;
+}
+
+.gallery a:nth-child(3) {
+  transform: rotate(10deg) translateY(20px);
+  z-index: 1;
+}
+
+.gallery a:hover {
+  transform: scale(1.15) rotate(0deg);
+  z-index: 10;
+}
+
+/* --- RESPONSIVE (Mobil și Tablete) --- */
+@media (max-width: 1024px) {
+  .main-container {
+    flex-direction: column-reverse; /* Textul jos, pozele sus */
+    text-align: center;
+    justify-content: center;
+    padding-top: 0;
+  }
+
+  .text-section {
+    align-items: center;
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .gallery {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .gallery a img {
+    width: 180px; /* Mai mici pe tabletă */
+  }
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  .paragraf {
+    font-size: 1.5rem;
+  }
+
+  .gallery {
+    flex-direction: column; 
+    height: auto;
+    gap: 30px;
+  }
+
+  .gallery a:nth-child(1),
+  .gallery a:nth-child(2),
+  .gallery a:nth-child(3) {
+    transform: none; 
+  }
+  
+  .gallery a img {
+    width: 80%; 
+    margin: 0 auto;
+  }
 }
