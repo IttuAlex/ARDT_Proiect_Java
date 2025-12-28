@@ -11,8 +11,6 @@
 @import "./pages/Socials.css";
 @import "./pages/Account.css";
 
-
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -37,16 +35,26 @@ a:hover {
   color: #535bf2;
 }
 
+/* === AICI AM FĂCUT SCHIMBĂRILE IMPORTANTE === */
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  padding: 0;
+  
+  /* Am scos 'display: flex' și 'place-items: center' 
+     pentru că stricau layout-ul paginilor lungi */
+  display: block; 
+  width: 100%;
   min-height: 100vh;
+  
+  /* Ascunde bara de scroll orizontală (linia din dreapta) */
+  overflow-x: hidden;
+
+  /* Setările corecte pentru fundal: */
   background-image: url("./images/background.jpeg");
-  background-repeat: repeat !important;
-  background-size: auto !important;
+  background-repeat: no-repeat !important; /* NU mai repetă imaginea */
+  background-size: cover !important;       /* O întinde pe tot ecranul */
+  background-position: center center !important;
   background-attachment: fixed !important;
-  min-height: 100vh;
 }
 
 h1 {

@@ -1,70 +1,59 @@
-body {
-  font-family: 'Georgia', serif;
-  color: rgb(163, 65, 65);
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  min-height: 100vh;
+/* --- CURĂȚENIE: Am șters regula 'body' de aici pentru că se bătea cap în cap cu index.css global --- */
+
+/* Stiluri generale pentru pagina home */
+.home {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 80px; /* Spațiu până la noile secțiuni */
+}
+
+
+/* --- STILURI EXISTENTE (Headers, Paragrafe, Inimă, Galerie) --- */
 header {
-  
   width: 100%;
   padding: 2rem 0;
-  margin-top: 80px;
+  margin-top: 40px;
   text-align: center;
-  -webkit-text-stroke: 2px #cc8d5a;
 }
 
-h1, h2 {
+h1 {
   font-size: 3.5rem;
   font-weight: 600;
   color: #f7d172;
   margin: 0;
   -webkit-text-stroke: 2px #cc8d5a;
   letter-spacing: 2px;
+  font-family: 'Georgia', serif;
 }
 
-.main-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem 5%; /* 5% padding lateral pentru a nu lipi de margini */
-  max-width: 1600px;
-  margin: 0 auto; /* Centrează tot conținutul pe ecrane mari */
-  width: 100%;
-  box-sizing: border-box;
-  min-height: 60vh;
-}
-
-/* --- SECȚIUNEA DE TEXT (Stânga) --- */
-.text-section {
-  flex: 1; /* Ocupă spațiul disponibil */
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  max-width: 600px; /* Să nu fie textul prea lung pe orizontală */
-}
-
-.paragraf {
+.paragraf, .paragraf2 {
   font-size: 2rem;
   color: #f7d172;
   -webkit-text-stroke: 0.8px #cc8d5a;
   line-height: 1.4;
-  margin: 0;
+  margin: 10px 0;
+  text-align: center;
+  font-family: 'Georgia', serif;
 }
 
 .heart-btn {
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 10px 0;
+  padding: 20px 0;
   width: fit-content;
+  margin-top: -30px; /* Ajustare poziție sub galerie */
+  z-index: 15;
 }
 
 .heart-btn svg {
@@ -82,102 +71,214 @@ h1, h2 {
   border-color: #f3d383;
 }
 
-/* --- GALERIE (Dreapta) --- */
+/* --- GALERIE (Styling existent păstrat) --- */
 .gallery {
-  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
   position: relative;
-  height: 400px; /* Înălțime fixă pentru a aranja imaginile */
+  height: 350px;
+  margin-top: 40px;
 }
 
 .gallery a {
   display: block;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s ease, z-index 0s linear 0.1s;
   position: relative;
-  /* Eliminăm translate-urile uriașe și folosim poziționare relativă */
 }
 
 .gallery a img {
-  width: 250px; /* Lățime controlată */
+  width: 220px;
   height: auto;
   border-radius: 16px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
   display: block;
+  border: 3px solid rgba(255, 255, 255, 0.8);
 }
 
-/* Aranjare estetică tip "evantai" */
+/* Aranjare evantai */
 .gallery a:nth-child(1) {
-  transform: rotate(-10deg) translateY(20px);
+  transform: rotate(-15deg) translateX(40px) scale(0.9);
   z-index: 1;
 }
 
 .gallery a:nth-child(2) {
-  transform: scale(1.1) z-index(2);
-  margin: 0 -40px; /* Suprapunere ușoară */
+  transform: scale(1.1);
   z-index: 3;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
 .gallery a:nth-child(3) {
-  transform: rotate(10deg) translateY(20px);
+  transform: rotate(15deg) translateX(-40px) scale(0.9);
   z-index: 1;
 }
 
 .gallery a:hover {
-  transform: scale(1.15) rotate(0deg);
+  transform: scale(1.2) rotate(0deg);
   z-index: 10;
+  transition: transform 0.4s ease, z-index 0s linear 0s;
 }
 
-/* --- RESPONSIVE (Mobil și Tablete) --- */
-@media (max-width: 1024px) {
-  .main-container {
-    flex-direction: column-reverse; /* Textul jos, pozele sus */
+
+/* =========================================
+   === SECȚIUNI NOI (PRODUSE / FEATURED) ===
+   ========================================= */
+
+.featured-container {
+  width: 90%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 60px; /* Spațiu între cele două chenare */
+  margin-bottom: 100px; /* Spațiu înainte de footer */
+}
+
+/* Stilul Chenarului (Cardului) - similar cu pagina About */
+.featured-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  /* Fundal maro închis transparent, elegant */
+  background: rgba(43, 29, 15, 0.92);
+  
+  padding: 40px;
+  border-radius: 25px;
+  
+  /* Umbră și contur fin auriu */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(215, 179, 71, 0.2);
+  
+  overflow: hidden; /* Pentru a tăia colțurile imaginilor */
+}
+
+/* Clasa pentru inversarea ordinii (Poză stânga, Text dreapta) */
+.featured-section.reverse {
+  flex-direction: row-reverse;
+}
+
+/* Cutia de text */
+.featured-text-box {
+  flex: 1; /* Ocupă spațiul rămas */
+  padding: 0 30px;
+  text-align: left;
+  color: #f0e6d2; /* Crem deschis pentru text */
+}
+
+.featured-text-box h2 {
+  font-family: 'Georgia', serif;
+  font-size: 1.8rem;
+  color: #cc8d5a; /* Portocaliu închis pentru subtitlu */
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+  -webkit-text-stroke: 0; /* Reset stroke */
+}
+
+.featured-text-box h3 {
+  font-family: "Times New Roman", serif;
+  font-size: 2.5rem;
+  color: #d7b347; /* Auriu pentru titlul principal al produsului */
+  margin: 0 0 20px 0;
+  font-style: italic;
+}
+
+.featured-text-box p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  font-family: sans-serif;
+}
+
+/* Butonul din chenar */
+.featured-btn {
+  padding: 12px 30px;
+  background-color: transparent;
+  color: #d7b347;
+  border: 2px solid #d7b347;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.featured-btn:hover {
+  background-color: #d7b347;
+  color: #2b1d0f;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(215, 179, 71, 0.3);
+}
+
+
+/* Cutia de imagine */
+.featured-image-box {
+  flex: 1;
+  max-width: 45%; /* Limităm lățimea imaginii */
+  height: 350px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  border: 3px solid rgba(255, 255, 255, 0.1);
+}
+
+.featured-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Imaginea umple chenarul fără a se deforma */
+  transition: transform 0.5s ease;
+}
+
+.featured-section:hover .featured-image-box img {
+  transform: scale(1.05); /* Ușor zoom la hover pe tot cardul */
+}
+
+
+/* --- RESPONSIVE (Mobil și Tablete mici) --- */
+@media (max-width: 900px) {
+  /* Pe mobil, punem totul în coloană */
+  .featured-section, .featured-section.reverse {
+    flex-direction: column;
     text-align: center;
-    justify-content: center;
-    padding-top: 0;
+    padding: 30px 20px;
+    gap: 30px;
   }
 
-  .text-section {
-    align-items: center;
+  .featured-text-box {
     text-align: center;
-    margin-top: 40px;
-  }
-
-  .gallery {
-    width: 100%;
-    margin-bottom: 20px;
+    padding: 0;
+    order: 2; /* Textul mereu jos pe mobil */
   }
   
-  .gallery a img {
-    width: 180px; /* Mai mici pe tabletă */
-  }
-}
-
-@media (max-width: 600px) {
-  h1 {
-    font-size: 2.5rem;
+  .featured-image-box {
+    max-width: 100%;
+    width: 100%;
+    height: 250px;
+    order: 1; /* Imaginea mereu sus pe mobil */
   }
 
-  .paragraf {
-    font-size: 1.5rem;
-  }
-
+  /* Ajustări galerie mobil */
   .gallery {
-    flex-direction: column; 
+    flex-direction: column;
     height: auto;
-    gap: 30px;
+    gap: 20px;
+    margin-top: 20px;
   }
 
   .gallery a:nth-child(1),
   .gallery a:nth-child(2),
   .gallery a:nth-child(3) {
-    transform: none; 
+    transform: none !important;
+    margin: 0;
+  }
+
+  .gallery a img {
+    width: 80vw;
+    max-width: 300px;
   }
   
-  .gallery a img {
-    width: 80%; 
-    margin: 0 auto;
+  .heart-btn {
+       margin-top: 20px;
   }
 }

@@ -1,55 +1,156 @@
+/* =========================================
+   FISIER: About.css
+   ========================================= */
+
+/* ========= PAGINA PRINCIPALĂ ========= */
 .about-page {
-  max-width: 900px;
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 140px 1.5rem 80px; /* Padding sus/jos/lateral */
   min-height: 100vh;
+
   display: flex;
   flex-direction: column;
-  justify-content: center; 
-  align-items: center;   
-  color: #cc8d5a;
+  align-items: center;
+  
+  /* IMPORTANT: Transparent, ca să se vadă fundalul global din index.css */
+  background: transparent !important;
 }
 
-.about-page h1 {
-  position: fixed;
-  left:43%;
-  top: 7%;
-  font-size: 2.5rem;
+/* ========= TITLUL PAGINII ========= */
+.about-title {
+  font-family: "Times New Roman", serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  font-style: italic;
+  
+  /* Culoare maro-roșcat elegant */
+  color: #8b2828; 
+  
+  margin-bottom: 70px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+/* ========= CARDURILE (SECȚIUNILE DE TEXT) ========= */
+.about-section {
+  width: 100%;
+  max-width: 800px; /* Lățime optimă pentru citit */
+  margin-bottom: 35px;
+
+  /* FUNDALUL MARO ÎNCHIS (CAFEA) - Aspect de sticlă mată */
+  background: rgba(43, 29, 15, 0.92); 
+  
+  padding: 40px 50px;
+  border-radius: 20px;
+
+  /* Umbră și contur fin */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(215, 179, 71, 0.2); /* Bordură fină aurie */
+
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+/* Efect când pui mouse-ul pe card */
+.about-section:hover {
+  transform: translateY(-5px);
+}
+
+/* Subtitlurile (Povestea Noastră, etc.) */
+.about-subtitle {
+  font-family: "Times New Roman", serif;
+  font-size: 1.9rem;
   font-weight: 600;
-  color: #f7d172;
-  width: fit-content;
-  margin: 100px auto 0;
-  -webkit-text-stroke: 2px #cc8d5a;
+  
+  /* Auriu pentru contrast pe maro */
+  color: #d7b347; 
+  
+  margin-bottom: 20px;
+  letter-spacing: 1px;
 }
 
-.about-page p {
-   background: rgba(165, 147, 81, 0.4);
-  border-radius: 15px;
-  font-size: 1.05rem;
-  position: fixed;
-  top: 40%;
-  left: 18%;
-  line-height: 1.8;
-  text-align: left;
-  margin: 0;
+/* Textul paragrafului */
+.about-text {
+  font-family: sans-serif; /* Font curat pentru citit ușor */
+  font-size: 1.15rem;
+  line-height: 1.7;
+  
+  /* Crem deschis - foarte lizibil */
+  color: #f0e6d2; 
 }
 
-/* opțional: spațiu mai mare între ultimul rând și margine */
-.about-page p br {
-  line-height: 2;
+
+/* =========================================
+   === ZONA DE IMAGE TRAIL (CHENARUL JOS) ===
+   ========================================= */
+
+.photo-box {
+  width: 100%;
+  max-width: 900px;
+  height: 500px; /* Înălțimea zonei de "desenat" cu poze */
+  margin: 60px auto 80px;
+
+  border-radius: 25px;
+  /* Fundal ușor întunecat transparent */
+  background: rgba(0, 0, 0, 0.15);
+  
+  /* CRUCIAL pentru poziționarea imaginilor dinamice */
+  position: relative; 
+  overflow: hidden; /* Imaginile nu ies din chenar */
+  
+  /* Bordură punctată stil vintage */
+  border: 2px dashed rgba(139, 40, 40, 0.5); 
+  
+  /* Schimbăm cursorul să indice interactivitate */
+  cursor: crosshair; 
+  
+  /* Centrare pentru textul placeholder */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* responsive */
-@media (max-width: 768px) {
-  .about-page {
-    margin: 6rem 1.5rem 3rem;
-    padding: 2rem 1.5rem;
-  }
+/* Textul "Move your mouse here" */
+.photo-placeholder-text {
+  font-family: "Times New Roman", serif;
+  font-size: 1.5rem;
+  color: rgba(215, 179, 71, 0.6); /* Auriu transparent */
+  pointer-events: none; /* Mouse-ul trece prin text */
+  font-style: italic;
+  animation: pulseText 2s infinite;
+  user-select: none;
+}
 
-  .about-page h1 {
-    font-size: 2rem;
-  }
+@keyframes pulseText {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
 
-  .about-page p {
-    font-size: 0.95rem;
-  }
+/* =========================================
+   === IMAGINILE DINAMICE (TRAIL) ===
+   (Acestea sunt generate de JS, dar stilizate aici)
+   ========================================= */
+
+.trail-img {
+  position: absolute; /* Poziționate absolut față de .photo-box */
+  width: 200px;       /* Dimensiunea pozelor */
+  height: 200px;
+  object-fit: cover;
+  
+  border-radius: 12px;
+  
+  /* Ramă albă ca la pozele vechi */
+  border: 4px solid #fff;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+
+  /* IMPORTANT: Centăm imaginea exact pe vârful mouse-ului */
+  transform: translate(-50%, -50%); 
+  
+  /* IMPORTANT: Mouse-ul trebuie să ignore poza pentru a declanșa în continuare evenimentul pe container */
+  pointer-events: none; 
+  
+  will-change: transform, opacity;
 }

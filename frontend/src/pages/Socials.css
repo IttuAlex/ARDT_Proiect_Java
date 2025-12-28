@@ -1,71 +1,71 @@
-/* === FUNDAL GENERAL PENTRU PAGINA SOCIALS === */
-.socials-wrap {
+/* =========================================
+   FISIER: Socials.css
+   ========================================= */
+
+/* Containerul Principal */
+.socials-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 120px; /* Loc pentru Navbar */
+  padding-bottom: 40px;
   min-height: 100vh;
+  
   display: flex;
   flex-direction: column;
-  /* align-items: center;  <- scoate/comm */
-  align-items: stretch;
-}
-
-/* === CARDUL ALB CU CONȚINUT === */
-.socials-page {
-  width: 200%;                /* era 80% — crește lățimea */
-  max-width: 1400px;         /* era 1000px — lărgește limita maximă */
-  min-height: 80vh;          /* ca să umple vizual pagina pe înălțime */
-  margin: 6rem auto 3rem;    /* puțin mai jos sub navbar */
-  padding: 4rem 3rem;        /* mai mult spațiu interior */
-  border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  text-align: center;
-  font-family: "Times New Roman", serif;
-  color: #2b1d0f;
-}
-/* === TITLUL === */
-.socials-page h1 {
-  margin: 0 0 1rem;
-  line-height: 1.2;
-  color: rgb(163, 65, 65);
-  font-style: italic;
-  font-size: 2.5rem;
-}
-
-/* === DESCRIERE === */
-.description {
-  max-width: 700px;
-  margin: 1rem auto 3rem auto;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #2b1d0f;
-}
-
-/* === GALERIE === */
-.gallery {
-  margin-top: 4rem;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 2rem;
+  
+  /* IMPORTANT: Transparent ca să se vadă fundalul global de hârtie */
+  background: transparent !important; 
 }
 
-.gallery img {
-  width: 280px;
-  height: 280px;
-  object-fit: cover;
-  border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
-  transition: transform 0.3s ease;
+/* === TITLUL PAGINII === */
+.page-title {
+  font-family: "Times New Roman", serif;
+  font-size: 3.5rem;
+  /* Vișiniu elegant (poți pune #d7b347 pentru auriu dacă preferi) */
+  color: #8b2828; 
+  margin-bottom: 50px;
+  text-align: center;
+  font-style: italic;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
 }
 
-.gallery img:hover {
-  transform: scale(1.05);
+/* === CARDUL INTRODUCTIV (Descriere + Socials) === */
+.social-intro-card {
+  /* Maro cafea închis, ușor transparent */
+  background: rgba(43, 29, 15, 0.92); 
+  
+  width: 90%;
+  max-width: 800px;
+  padding: 40px;
+  border-radius: 25px;
+  
+  /* Umbră și efect de sticlă */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(215, 179, 71, 0.2); /* Contur fin auriu */
+  
+  text-align: center;
+  margin-bottom: 60px;
 }
 
-/* === LINKURI SOCIALE === */
+.description {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #f0e6d2; /* Crem deschis */
+  margin-bottom: 40px;
+}
+
+.description strong {
+  color: #d7b347; /* Auriu */
+}
+
+/* === LINKURILE SOCIALE (Butoane) === */
 .social-links {
   display: flex;
   justify-content: center;
-  gap: 3rem;
+  gap: 30px;
   flex-wrap: wrap;
 }
 
@@ -73,150 +73,172 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.social-item a {
-  font-size: 1.3rem;
-  font-weight: bold;
+  gap: 10px;
   text-decoration: none;
-  color: rgb(163, 65, 65);
-  margin-bottom: 10px;
-  transition: color 0.3s ease;
+  padding: 15px 25px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.05); /* Ușor luminat */
+  transition: all 0.3s ease;
+  min-width: 100px;
 }
 
-.social-item a:hover {
-  color: #cc8d5a;
+.social-item span {
+  font-weight: bold;
+  color: #f0e6d2;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
 }
 
 .social-icon {
-  font-size: 60px;
-  transition: transform 0.3s ease, color 0.3s ease;
-  cursor: pointer;
+  font-size: 40px;
+  transition: transform 0.3s ease;
 }
 
-.social-icon:hover {
+/* Culori specifice la hover */
+.instagram .social-icon { color: #e4405f; }
+.tiktok .social-icon { color: #f0e6d2; text-shadow: 2px 2px 0px #000; } 
+.facebook .social-icon { color: #1877f2; }
+
+/* Efecte Hover pe Buton */
+.social-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-5px);
+}
+.social-item:hover .social-icon {
   transform: scale(1.2);
 }
 
-/* === CULORI SPECIFICE ICONIȚELOR === */
-.instagram {
-  color: #e4405f;
+/* === GALERIE (Stil Curat - Fără Chenar Alb) === */
+.gallery {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-bottom: 80px;
 }
 
-.tiktok {
-  color: #000000;
+.photo-frame {
+  background: transparent; /* Fără fundal alb */
+  padding: 0;              /* Fără spațiere */
+  
+  border-radius: 20px;
+  overflow: hidden;        /* Taie colțurile imaginii */
+  
+  /* Umbră și contur fin auriu */
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+  border: 2px solid rgba(215, 179, 71, 0.3); 
+  
+  transform: rotate(0deg); /* Drepte */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.facebook {
-  color: #1877f2;
+.photo-frame:hover {
+  transform: scale(1.05); 
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  border-color: rgba(215, 179, 71, 0.8); /* Auriu aprins la hover */
+  z-index: 10;
 }
 
-/* === CARD LOCAȚIE === */
+.photo-frame img {
+  width: 280px;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+/* === SECȚIUNE LOCAȚIE (Layout Responsive) === */
 .location-section {
+  width: 95%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column; /* Pe mobil: una sub alta */
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+/* Pe Desktop: una lângă alta */
+@media (min-width: 900px) {
+  .location-section {
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
+
+/* Cardul cu Text Locație */
+.location-card {
+  flex: 1;
+  background: rgba(43, 29, 15, 0.95); /* Maro intens */
+  color: #f5f5f5;
+  padding: 40px;
+  border-radius: 20px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(215, 179, 71, 0.2);
+  
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-top: 3rem;
-}
-
-.location-card {
-  background: rgba(60, 60, 60, 0.9);        /* gri închis elegant */
-  color: #f5f5f5;
-  padding: 1.5rem 2rem;
-  border-radius: 18px;
-  width: 80%;
-  max-width: 520px;
-  text-align: center;
-  margin-bottom: 1.25rem;
-  position: relative;
-  box-shadow:
-    0 0 20px rgba(158, 123, 28, 0.2),
-    0 6px 20px rgba(0, 0, 0, 0.4);
-  transition: 
-    background-color 0.4s ease,
-    box-shadow 0.4s ease,
-    transform 0.3s ease;
-}
-
-/* efect hover — se înnegrește și prinde puls auriu */
-.location-card:hover {
-  background: rgba(0, 0, 0, 0.95);          /* negru elegant */
-  transform: translateY(-4px);
-  animation: pulseGold 1.8s ease-in-out infinite;
-}
-
-/* animația pulse */
-@keyframes pulseGold {
-  0% {
-    box-shadow:
-      0 0 18px rgba(158, 123, 28, 0.3),
-      0 6px 20px rgba(0, 0, 0, 0.4);
-  }
-  50% {
-    box-shadow:
-      0 0 28px rgba(158, 123, 28, 0.55),
-      0 8px 26px rgba(0, 0, 0, 0.5);
-  }
-  100% {
-    box-shadow:
-      0 0 18px rgba(158, 123, 28, 0.3),
-      0 6px 20px rgba(0, 0, 0, 0.4);
-  }
-}
-
-
-
-/* marker rotund „stil Kafea” deasupra cardului */
-.location-icon {
-  position: absolute;
-  top: -32px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 64px;
-  height: 64px;
-  border-radius: 9999px;
-  background: #1e1e1e;
-  display: grid;
-  place-items: center;
-  font-size: 28px;
-  color: #d7b347; /* auriu */
-  box-shadow: 0 6px 18px rgba(0,0,0,.4);
-}
-
-.location-card h2 {
-  margin-top: 16px; /* spațiu sub icon */
-  color: #d7b347;
-  font-size: 1.4rem;
-  margin-bottom: .5rem;
-  letter-spacing: .5px;
-}
-
-.location-card p {
-  margin: .25rem 0;
-  font-size: 1rem;
-}
-
-/* === HARTA === */
-.map-container {
-  width: 100%;
-  display: flex;
   justify-content: center;
 }
 
-.map-container iframe {
-  width: 80%;          /* era 90% */
-  max-width: 850px;    /* era 1000px */
-  height: 320px;       /* era 400px */
-  border-radius: 15px;
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.25);
+/* Iconița rotundă (Pin) */
+.location-icon {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 60px;
+  background: #1e1e1e;
+  border: 2px solid #d7b347;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
 
-/* === FOOTER === */
-footer {
-  background-color: #cc8d5a; ;
-  color: rgb(163, 65, 65);
-  padding: 10px;
-  position: center;
+.location-card h2 {
+  color: #d7b347;
+  font-family: "Times New Roman", serif;
+  font-size: 1.8rem;
+  margin-top: 20px;
+  margin-bottom: 25px;
+}
+
+.location-details p {
+  font-size: 1.1rem;
+  margin: 8px 0;
+  color: #e0d0b8;
+}
+
+.program {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px dashed rgba(215, 179, 71, 0.3);
+}
+
+.program p {
+  display: flex;
+  justify-content: space-between;
+  max-width: 250px;
+  margin: 5px auto;
+  font-size: 1rem;
+}
+
+.program span {
+  color: #d7b347;
+  font-weight: bold;
+}
+
+/* Container Harta */
+.map-container {
+  flex: 1.5; /* Harta ocupă puțin mai mult loc decât textul */
   width: 100%;
-  bottom: 0;
+  min-height: 350px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 4px solid rgba(255, 255, 255, 0.1);
 }
