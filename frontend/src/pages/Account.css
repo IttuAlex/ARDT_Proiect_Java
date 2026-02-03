@@ -177,6 +177,26 @@
   font-weight: bold;
 }
 
+.admin-btn:hover {
+    background-color: #ffebee !important;
+    color: #d32f2f !important;
+}
+
+.admin-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #f7d172;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid #cc8d5a;
+    font-weight: bold;
+    color: #5a4a42;
+}
+
 @media (max-width: 600px) {
   .account-main-content {
     padding-top: 100px;

@@ -41,6 +41,8 @@ export default function Account() {
         }
     }, [navigate]);
 
+    const isAdmin = user?.email === "test@gmail.com" || user?.role === "admin";
+
     const renderContent = () => {
         switch (activeTab) {
             case "profile":
@@ -92,6 +94,18 @@ export default function Account() {
                         <p>Here you can change your password.</p>
                     </div>
                 );
+                case "admin":
+                return (
+                    <div className="tab-content">
+                        <h2>Admin Dashboard</h2>
+                        <div className="admin-stats">
+                            <div className="stat-card">Total Orders: 42</div>
+                            <div className="stat-card">New Users: 12</div>
+                        </div>
+                        <p>Manage products and view all transactions here.</p>
+                        
+                    </div>
+                );
             default:
                 return null;
         }
@@ -133,6 +147,14 @@ export default function Account() {
                         >
                             Settings
                         </button>
+                        <button 
+                                className={`menu-btn admin-btn ${activeTab === "admin" ? "active" : ""}`}
+                                onClick={() => setActiveTab("admin")}
+                                style={{ color: "#d9534f", fontWeight: "bold", borderTop: "1px solid #eee", marginTop: "10px" }}
+                            >
+                                Admin Panel
+                            </button>
+                    
                     </div>
                 </aside>
 

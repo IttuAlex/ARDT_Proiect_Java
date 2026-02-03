@@ -12,21 +12,22 @@ import espresso from "../images/espresso.jpeg";
 import espdublu from "../images/espressodublu.png";
 import longblack from "../images/longblack.jpeg";
 import v60 from "../images/v60.jpeg";
-import cortado from "../images/cordato.jpg";
-import cappuccino from "../images/cappuciono.jpeg";
-import flatwhite from "../images/flatwhite.webp";
+import cortado from "../images/cordato.jpg"; 
+import cappuccino from "../images/cappuciono.jpeg"; 
+import flatwhite from "../images/flatwhite.jpg";
 import latte from "../images/latte.jpg";
 import baby from "../images/babycino.jpg";
 import imgHotCioco from "../images/hotcioco.jpg";
 import imgCeai from "../images/ceai.jpg";
 import imgEspressoTonic from "../images/espressotonic.jpeg";
 import imgColdBrewTonic from "../images/coldbrewtonic.jpg";
-import imgColdBrewLatte from "../images/coldbrewlatte.jfif";
+import imgColdBrewLatte from "../images/coldbrewtonic.jpg";
 import imgColdBrew from "../images/coldbrew.jpg";
-import imgIceCappuccino from "../images/icecappucino.jpeg";
+import imgIceCappuccino from "../images/icecappucino.jpeg"; 
 import imgMatcha from "../images/matcha.jpeg";
 import imgLimonada from "../images/limonada.jpeg";
 import imgPlaceholder from "../images/poza1.jpeg";
+import imgSocata from "../images/socata.jpg"
 
 import { FaShoppingCart } from "react-icons/fa";
 
@@ -51,7 +52,7 @@ const products = [
   { id: 18, name: "Matcha Latte", img: imgMatcha, ingredients: "ceai matcha pudra, apa, crema de lapte, 300ml", price: 20 },
   { id: 19, name: "Ice Matcha Latte", img: imgMatcha, ingredients: "ceai matcha pudra, apa, crema de lapte, gheata, 250ml", price: 20 },
   { id: 20, name: "Matcha Tonic", img: imgMatcha, ingredients: "ceai matcha pudra, apa, apa tonica, 180ml", price: 22 },
-  { id: 21, name: "Socata", img: imgPlaceholder, ingredients: "sirop de soc, zeama de lamaie, apa carbogazoasa, gheata, 250ml", price: 14 },
+  { id: 21, name: "Socata", img: imgSocata, ingredients: "sirop de soc, zeama de lamaie, apa carbogazoasa, gheata, 250ml", price: 14 },
   { id: 22, name: "Limonada cu zmeura", img: imgLimonada, ingredients: "sirop de zmeura, zeama de lamaie, apa carbogazoasa, 250ml", price: 14 }
 ];
 const Order = () => {
