@@ -11,6 +11,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import requests
+import random
 
 SMTP_EMAIL = "tudorlepirda@gmail.com"
 SMTP_PASSWORD = "vnsy ncdg sopf tkqn"
@@ -269,7 +270,8 @@ def get_me(current_user):
         return jsonify({
             "id": str(user["_id"]),
             "email": user["email"],
-            "roles": user.get("roles", [])
+            "roles": user.get("roles", []),
+            "loyalty_points": user.get("loyalty_points", 0)
         }), 200
 
     except Exception as e:
@@ -293,12 +295,19 @@ def create_order(current_user):
             return jsonify({"error": "Items trebuie sa fie lista"}), 400
         
         user_id = current_user.get("sub")
+        
+        puncte_noi = random.randint(1, 3) # Generează 1, 2 sau 3 puncte
+        users.update_one(
+            {"_id": ObjectId(user_id)},
+            {"$inc": {"loyalty_points": puncte_noi}} # Crește punctele în DB
+        )
 
         new_order = {
             "user_id": ObjectId(user_id),
             "items": items,
             "total_price": total_price,
             "status": "received",
+            "loyalty_points_earned": puncte_noi,
             "created_at": datetime.datetime.utcnow()
         }
 
@@ -360,6 +369,52 @@ def get_admin_stats(current_user):
     except Exception as e:
         print(f"Eroare Stats: {str(e)}")
         return jsonify({"error": str(e)}), 500
+    
+@app.get("/api/admin/all-orders")
+@token_required
+def get_all_orders(current_user):
+    try:
+        all_orders = list(orders.find().sort("created_at", -1))
+        for order in all_orders:
+            order["_id"] = str(order["_id"])
+            order["user_id"] = str(order.get("user_id", ""))
+        return jsonify(all_orders), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# 2. Rută pentru a finaliza o comandă
+@app.patch("/api/admin/orders/<order_id>/finalize")
+@token_required
+def finalize_order(current_user, order_id):
+    try:
+        result = orders.update_one(
+            {"_id": ObjectId(order_id)},
+            {"$set": {"status": "finalized"}}
+        )
+        if result.modified_count:
+            return jsonify({"message": "Comanda a fost finalizata!"}), 200
+        return jsonify({"error": "Comanda nu a fost gasita"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+
+@app.get("/api/orders/my-orders")
+@token_required
+def get_my_orders(current_user):
+    try:
+        user_id = current_user.get("sub")
+        # Căutăm în baza de date doar comenzile acestui user
+        my_orders = list(orders.find({"user_id": ObjectId(user_id)}).sort("created_at", -1))
+        
+        for order in my_orders:
+            order["_id"] = str(order["_id"])
+            order["user_id"] = str(order["user_id"])
+            
+        return jsonify(my_orders), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500  
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

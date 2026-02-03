@@ -29,6 +29,8 @@ export default function Account() {
     const navigate = useNavigate();
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [allOrders, setAllOrders] = useState([]);
+    const [userOrders, setUserOrders] = useState([]);
     const toastOptions = {
     position: "bottom-right",
     autoClose: 4000,
@@ -39,19 +41,92 @@ export default function Account() {
     };
 
     useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        } else {
+    if (activeTab === "orders") {
+        fetchMyOrders();
+    }
+    }, [activeTab]);
+
+    const fetchMyOrders = async () => {
+    setLoading(true);
+    try {
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:8000/api/orders/my-orders", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (res.ok) setUserOrders(data);
+    } catch (error) {
+        toast.error("Eroare la încărcarea comenzilor");
+    } finally {
+        setLoading(false);
+    }
+};
+
+
+
+useEffect(() => {
+    const fetchFreshUser = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
             navigate("/login");
+            return;
         }
-    }, [navigate]);
+
+        try {
+            
+            const res = await fetch("http://localhost:8000/api/me", {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                setUser(data); 
+                localStorage.setItem("user", JSON.stringify(data));
+            } else {
+                navigate("/login");
+            }
+        } catch (error) {
+            console.error("Eroare refresh puncte:", error);
+        }
+    };
+
+    fetchFreshUser();
+}, [navigate, activeTab]); 
 
     useEffect(() => {
         if (activeTab === "admin") {
             fetchStats();
         }
     }, [activeTab]);
+    
+
+
+    useEffect(() => {
+        if (activeTab === "manage_orders") {
+            fetchAllOrders();
+        }
+    }, [activeTab]);
+
+    const fetchAllOrders = async () => {
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:8000/api/admin/all-orders", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (res.ok) setAllOrders(data);
+    };
+
+    const handleFinalize = async (orderId) => {
+        const token = localStorage.getItem("token");
+        const res = await fetch(`http://localhost:8000/api/admin/orders/${orderId}/finalize`, {
+            method: "PATCH",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (res.ok) {
+            toast.success("Comandă finalizată!");
+            fetchAllOrders(); // Refresh listă
+        }
+    };
 
     const fetchStats = async () => {
         setLoading(true);
@@ -81,7 +156,14 @@ export default function Account() {
             case "profile":
                 return (
                     <div className="tab-content">
-                        <h2>Personal Information</h2>
+                        <div className="profile-header-stats">
+                            <h2>Personal Information</h2>
+        
+                            <div className="loyalty-card">
+                                <span>Loyalty Points:</span>
+                                <strong> {user?.loyalty_points || 0}</strong>
+                            </div>
+                        </div>
                         <div className="profile-grid">
                             <div className="input-group">
                                 <label>Name</label>
@@ -113,13 +195,38 @@ export default function Account() {
                         <button className="save-btn">Save Changes</button>
                     </div>
                 );
-            case "orders":
-                return (
-                    <div className="tab-content">
-                        <h2>Orders</h2>
-                        <p>No orders here.</p>
-                    </div>
-                );
+                case "orders":
+                    return (
+                        <div className="tab-content">
+                            <h2>Your Orders</h2>
+                            {loading && <p>Loading orders...</p>}
+                            
+                            <div className="user-orders-list">
+                                {userOrders.length === 0 ? (
+                                    <p>No orders found. Time for a coffee?</p>
+                                ) : (
+                                    userOrders.map(order => (
+                                        <div key={order._id} className="user-order-card">
+                                            <div className="order-info">
+                                                <span className="order-date">
+                                                    {new Date(order.created_at).toLocaleDateString()}
+                                                </span>
+                                                <p className="order-items">
+                                                    {order.items.map(i => `${i.name} x${i.quantity || 1}`).join(", ")}
+                                                </p>
+                                            </div>
+                                            <div className="order-status-box">
+                                                <span className="order-price">{order.total_price} RON</span>
+                                                <span className={`status-pill ${order.status === 'finalized' ? 'done' : 'ongoing'}`}>
+                                                    {order.status === 'finalized' ? 'Finalizata' : 'Ongoing'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    ); 
             case "settings":
                 return (
                     <div className="tab-content">
@@ -127,7 +234,7 @@ export default function Account() {
                         <p>Here you can change your password.</p>
                     </div>
                 );
-case "admin":
+            case "admin":
                 return (
                     <div className="tab-content admin-dashboard">
                         <h2>Admin Dashboard</h2>
@@ -186,6 +293,51 @@ case "admin":
                         )}
                     </div>
                 );
+
+            case "manage_orders":
+                return (
+                    <div className="tab-content">
+                        <h2>Gestionare Comenzi</h2>
+                        <div className="orders-table-container">
+                            <table className="admin-orders-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID Comandă</th>
+                                        <th>Produse</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Acțiune</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {allOrders.map(order => (
+                                        <tr key={order._id}>
+                                            <td>{order._id.slice(-6)}</td>
+                                            <td>{order.items.map(i => `${i.name} x${i.quantity || 1}`).join(", ")}</td>
+                                            <td>{order.total_price} RON</td>
+                                            <td>
+                                                <span className={`status-badge ${order.status}`}>
+                                                    {order.status}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {order.status !== "finalized" && (
+                                                    <button 
+                                                        className="finalize-btn"
+                                                        onClick={() => handleFinalize(order._id)}
+                                                    >
+                                                        Finalizare
+                                                    </button>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    );
+   
             default:
                 return null;
         }
@@ -234,6 +386,14 @@ case "admin":
                             >
                                 Admin Panel
                             </button>
+
+                        <button 
+                            className={`menu-btn ${activeTab === "manage_orders" ? "active" : ""}`}
+                            onClick={() => setActiveTab("manage_orders")}
+                            style={{ color: "#28a745", fontWeight: "bold" }}
+                        >
+                            Manage Orders
+                        </button>    
                     
                     </div>
                 </aside>
