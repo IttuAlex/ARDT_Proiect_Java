@@ -416,5 +416,41 @@ def get_my_orders(current_user):
         return jsonify({"error": str(e)}), 500  
 
 
+@app.post("/api/loyalty/redeem")
+@token_required
+def redeem_loyalty_points(current_user):
+    try:
+        data = request.get_json()
+        product_name = data.get("product_name")
+        points_cost = data.get("points_cost") # ex: 10, 20, 30
+        user_id = current_user.get("sub")
+
+        user = users.find_one({"_id": ObjectId(user_id)})
+        
+        # 1. Verificăm dacă userul are destule puncte
+        if user.get("loyalty_points", 0) < points_cost:
+            return jsonify({"error": "Nu ai suficiente puncte!"}), 400
+
+        # 2. Scădem punctele din profilul userului
+        users.update_one(
+            {"_id": ObjectId(user_id)},
+            {"$inc": {"loyalty_points": -points_cost}}
+        )
+
+        # 3. Creăm comanda (cu preț 0, marcată ca recompensă)
+        new_order = {
+            "user_id": ObjectId(user_id),
+            "items": [{"name": f"🎁 REWARD: {product_name}", "quantity": 1}],
+            "total_price": 0,
+            "status": "received",
+            "type": "loyalty_reward",
+            "created_at": datetime.datetime.utcnow()
+        }
+        orders.insert_one(new_order)
+
+        return jsonify({"message": "Produs revendicat cu succes!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

@@ -4,10 +4,20 @@ import { toast } from "react-toastify";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "./Account.css";
+import imgEspresso from "../images/espresso.jpeg";
+import imgCeai from "../images/ceai.jpg";
+import imgCappuccino from "../images/cappuciono.jpeg"; 
+import imgV60 from "../images/v60.jpeg";
+import imgFlatWhite from "../images/flatwhite.jpg";
+import imgMatcha from "../images/matcha.jpeg";
+import imgColdBrewTonic from "../images/coldbrewtonic.jpg";
+
+
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, 
   ResponsiveContainer, LineChart, Line, Legend 
 } from 'recharts';
+
 
 const cities = [
   "Alba Iulia", "Alexandria", "Arad", "Bacău", "Baia Mare", "Bistrița", "Blaj", "Botoșani", "Brad", "Brașov",
@@ -23,6 +33,16 @@ const cities = [
   "Toplița", "Tulcea", "Turda", "Turnu Măgurele", "Vaslui", "Vatra Dornei", "Vulcan", "Zalău", "Zărnești"
 ];
 
+const loyaltyCatalog = [
+    { name: "Espresso", points: 10, image: imgEspresso },
+    { name: "Ceai Cald", points: 10, image: imgCeai },
+    { name: "Cappuccino", points: 20, image: imgCappuccino },
+    { name: "V60 Brew", points: 20, image: imgV60 },
+    { name: "Flat White", points: 30, image: imgFlatWhite },
+    { name: "Matcha Latte", points: 30, image: imgMatcha },
+    { name: "Cold Brew Tonic", points: 40, image: imgColdBrewTonic }
+];
+
 export default function Account() {
     const [user, setUser] = useState(null);
     const [activeTab, setActiveTab] = useState("profile");
@@ -31,6 +51,7 @@ export default function Account() {
     const [loading, setLoading] = useState(false);
     const [allOrders, setAllOrders] = useState([]);
     const [userOrders, setUserOrders] = useState([]);
+    const [showCatalog, setShowCatalog] = useState(false);
     const toastOptions = {
     position: "bottom-right",
     autoClose: 4000,
@@ -39,6 +60,37 @@ export default function Account() {
     pauseOnHover: true,
     draggable: true,
     };
+
+    const handleRedeem = async (product) => {
+    if (user.loyalty_points < product.points) {
+        toast.error("Nu ai destule puncte!");
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+    const res = await fetch("http://localhost:8000/api/loyalty/redeem", {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}` 
+        },
+        body: JSON.stringify({
+            product_name: product.name,
+            points_cost: product.points
+        })
+    });
+
+    if (res.ok) {
+        toast.success(`Ai comandat ${product.name} folosind puncte!`);
+        setShowCatalog(false);
+       
+        const freshRes = await fetch("http://localhost:8000/api/me", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const freshData = await freshRes.json();
+        setUser(freshData);
+    }
+};
 
     useEffect(() => {
     if (activeTab === "orders") {
@@ -159,11 +211,34 @@ useEffect(() => {
                         <div className="profile-header-stats">
                             <h2>Personal Information</h2>
         
-                            <div className="loyalty-card">
-                                <span>Loyalty Points:</span>
-                                <strong> {user?.loyalty_points || 0}</strong>
+                            <div className="loyalty-card clickable" onClick={() => setShowCatalog(!showCatalog)}>
+                                <span>Loyalty Points (Click to Spend):</span>
+                                <strong>✨ {user?.loyalty_points || 0}</strong>
                             </div>
+
+                            {showCatalog && (
+                                <div className="loyalty-redemption-menu">
+                                <h4>Alege o recompensă ✨</h4>
+                                <div className="loyalty-grid"> {/* Am adăugat un wrapper grid */}
+                                    {loyaltyCatalog.map((item) => (
+                                        <button 
+                                            key={item.name}
+                                            className={`redeem-card ${user.loyalty_points >= item.points ? 'available' : 'locked'}`}
+                                            onClick={() => handleRedeem(item)}
+                                            disabled={user.loyalty_points < item.points}
+                                        >
+                                            <img src={item.image} alt={item.name} className="redeem-img" />
+                                            <div className="redeem-info">
+                                                <span className="redeem-name">{item.name}</span>
+                                                <span className="redeem-cost">{item.points} puncte</span>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            )}
                         </div>
+
                         <div className="profile-grid">
                             <div className="input-group">
                                 <label>Name</label>
