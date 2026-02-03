@@ -3,12 +3,12 @@ import { gsap } from "gsap";
 import "./About.css";
 
 // Importă imaginile tale aici
-import img1 from "../images/cafea1.png";
-import img2 from "../images/cafea2.png";
-import img3 from "../images/cafea3.png";
-import img4 from "../images/cafea4.jpg";
-import img5 from "../images/cafea1.png";
-import img6 from "../images/cafea2.png";
+import img1 from "../images/espresso.jpeg";
+import img2 from "../images/flatwhite.webp";
+import img3 from "../images/coldbrew.jpg";
+import img4 from "../images/icecappucino.jpeg";
+import img5 from "../images/limonada.jpeg";
+import img6 from "../images/matcha.jpeg";
 
 // Lista imaginilor pentru trail
 const images = [img1, img2, img3, img4, img5, img6];

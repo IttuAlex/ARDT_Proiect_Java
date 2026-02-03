@@ -7,8 +7,8 @@ import Footer from "../components/Footer.jsx";
 
 /* === AICI IMPORȚI POZELE TALE NOI === */
 /* Asigură-te că numele fișierelor corespund exact (png/jpg) */
-import cafea1 from "../images/cafea1.png"; 
-import cafea2 from "../images/cafea2.png";
+import cafea1 from "../images/espresso.jpeg"; 
+import cafea2 from "../images/matcha.jpeg";
 
 export default function Socials() {
   const titleRef = useRef(null);
