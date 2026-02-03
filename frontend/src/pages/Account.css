@@ -459,6 +459,82 @@
 }
 
 
+.settings-header {
+    margin-bottom: 30px;
+}
+
+.settings-subtitle {
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: -20px;
+    margin-bottom: 20px;
+}
+
+.settings-container {
+    max-width: 500px; /* Centrăm și limităm lățimea pentru un look mai clean */
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.settings-section h3 {
+    font-size: 1.2rem;
+    color: #5a4a42;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.password-requirements {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.password-requirements ul {
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+.danger-zone {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ffcccc;
+    border-radius: 12px;
+    background-color: #fffafa;
+}
+
+.danger-zone p {
+    font-size: 0.85rem;
+    color: #d9534f;
+    margin-bottom: 15px;
+}
+
+.delete-account-btn {
+    background-color: transparent;
+    color: #d9534f;
+    border: 2px solid #d9534f;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-account-btn:hover {
+    background-color: #d9534f;
+    color: white;
+}
+
+
 @media (max-width: 600px) {
   .charts-container {
         grid-template-columns: 1fr;

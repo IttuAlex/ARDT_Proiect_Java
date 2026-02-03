@@ -305,9 +305,50 @@ useEffect(() => {
             case "settings":
                 return (
                     <div className="tab-content">
-                        <h2>Account Settings</h2>
-                        <p>Here you can change your password.</p>
+            <div className="settings-header">
+                <h2>Account Settings</h2>
+                <p className="settings-subtitle">Gestionați securitatea contului dumneavoastră</p>
+            </div>
+
+            <div className="settings-container">
+                <div className="settings-section">
+                    <h3>Schimbă Parola</h3>
+                    <div className="settings-form">
+                        <div className="input-group">
+                            <label>Parola Actuală</label>
+                            <input type="password" placeholder="Introduceți parola actuală" />
+                        </div>
+                        
+                        <div className="input-group">
+                            <label>Parola Nouă</label>
+                            <input type="password" placeholder="Minim 8 caractere" />
+                        </div>
+
+                        <div className="input-group">
+                            <label>Confirmă Parola Nouă</label>
+                            <input type="password" placeholder="Repetați parola nouă" />
+                        </div>
+
+                        <div className="password-requirements">
+                            <ul>
+                                <li>Parola trebuie să conțină cel puțin o majusculă.</li>
+                                <li>Parola trebuie să conțină cel puțin un număr.</li>
+                            </ul>
+                        </div>
+
+                        <button className="save-btn" onClick={() => toast.info("Funcție demonstrativă: Parola nu a fost schimbată.")}>
+                            Actualizează Parola
+                        </button>
                     </div>
+                </div>
+
+                <div className="settings-section danger-zone">
+                    <h3>Zona Periculoasă</h3>
+                    <p>Odată ce ștergeți contul, nu mai există cale de întoarcere.</p>
+                    <button className="delete-account-btn">Șterge Contul</button>
+                </div>
+            </div>
+        </div>
                 );
             case "admin":
                 return (
