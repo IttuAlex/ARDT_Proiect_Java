@@ -296,10 +296,10 @@ def create_order(current_user):
         
         user_id = current_user.get("sub")
         
-        puncte_noi = random.randint(1, 3) # Generează 1, 2 sau 3 puncte
+        puncte_noi = random.randint(1, 3) 
         users.update_one(
             {"_id": ObjectId(user_id)},
-            {"$inc": {"loyalty_points": puncte_noi}} # Crește punctele în DB
+            {"$inc": {"loyalty_points": puncte_noi}} 
         )
 
         new_order = {
@@ -324,18 +324,16 @@ def create_order(current_user):
 @token_required
 def get_admin_stats(current_user):
     try:
-        # --- 1. Calculăm Venituri și Nr. Comenzi ---
         pipeline_sum = [
             {"$group": {"_id": None, "rev": {"$sum": "$total_price"}, "count": {"$sum": 1}}}
         ]
         sum_res = list(orders.aggregate(pipeline_sum))
         summary = sum_res[0] if sum_res else {"rev": 0, "count": 0}
 
-        # --- 2. Numărăm Userii Noi (ultimele 30 zile) ---
         thirty_days = datetime.datetime.utcnow() - datetime.timedelta(days=30)
         new_u = users.count_documents({"register_time": {"$gte": thirty_days}})
 
-        # --- 3. Top 5 Produse ---
+   
         pipeline_p = [
             {"$unwind": "$items"},
             {"$group": {"_id": "$items.name", "val": {"$sum": 1}}},
@@ -344,7 +342,6 @@ def get_admin_stats(current_user):
         ]
         top_p = [{"name": p["_id"], "value": p["val"]} for p in orders.aggregate(pipeline_p)]
 
-        # --- 4. Trend Vânzări (ultimele 7 zile) ---
         seven_days = datetime.datetime.utcnow() - datetime.timedelta(days=7)
         pipeline_t = [
             {"$match": {"created_at": {"$gte": seven_days}}},
@@ -382,7 +379,7 @@ def get_all_orders(current_user):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# 2. Rută pentru a finaliza o comandă
+
 @app.patch("/api/admin/orders/<order_id>/finalize")
 @token_required
 def finalize_order(current_user, order_id):
@@ -404,7 +401,6 @@ def finalize_order(current_user, order_id):
 def get_my_orders(current_user):
     try:
         user_id = current_user.get("sub")
-        # Căutăm în baza de date doar comenzile acestui user
         my_orders = list(orders.find({"user_id": ObjectId(user_id)}).sort("created_at", -1))
         
         for order in my_orders:
@@ -422,22 +418,20 @@ def redeem_loyalty_points(current_user):
     try:
         data = request.get_json()
         product_name = data.get("product_name")
-        points_cost = data.get("points_cost") # ex: 10, 20, 30
+        points_cost = data.get("points_cost")
         user_id = current_user.get("sub")
 
         user = users.find_one({"_id": ObjectId(user_id)})
         
-        # 1. Verificăm dacă userul are destule puncte
+
         if user.get("loyalty_points", 0) < points_cost:
             return jsonify({"error": "Nu ai suficiente puncte!"}), 400
 
-        # 2. Scădem punctele din profilul userului
         users.update_one(
             {"_id": ObjectId(user_id)},
             {"$inc": {"loyalty_points": -points_cost}}
         )
 
-        # 3. Creăm comanda (cu preț 0, marcată ca recompensă)
         new_order = {
             "user_id": ObjectId(user_id),
             "items": [{"name": f"🎁 REWARD: {product_name}", "quantity": 1}],
