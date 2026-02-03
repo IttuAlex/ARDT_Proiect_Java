@@ -1,4 +1,4 @@
-import os, jwt, datetime, requests, smtplib
+import os, jwt, datetime
 from flask import Flask, jsonify, request
 from pymongo import MongoClient, ASCENDING
 from flask_cors import CORS
@@ -10,6 +10,7 @@ from email.mime.multipart import MIMEMultipart
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import requests
 
 SMTP_EMAIL = "tudorlepirda@gmail.com"
 SMTP_PASSWORD = "vnsy ncdg sopf tkqn"
