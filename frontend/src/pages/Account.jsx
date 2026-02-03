@@ -4,6 +4,10 @@ import { toast } from "react-toastify";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "./Account.css";
+import { 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, 
+  ResponsiveContainer, LineChart, Line, Legend 
+} from 'recharts';
 
 const cities = [
   "Alba Iulia", "Alexandria", "Arad", "Bacău", "Baia Mare", "Bistrița", "Blaj", "Botoșani", "Brad", "Brașov",
@@ -23,6 +27,8 @@ export default function Account() {
     const [user, setUser] = useState(null);
     const [activeTab, setActiveTab] = useState("profile");
     const navigate = useNavigate();
+    const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(false);
     const toastOptions = {
     position: "bottom-right",
     autoClose: 4000,
@@ -41,6 +47,33 @@ export default function Account() {
         }
     }, [navigate]);
 
+    useEffect(() => {
+        if (activeTab === "admin") {
+            fetchStats();
+        }
+    }, [activeTab]);
+
+    const fetchStats = async () => {
+        setLoading(true);
+        try {
+            const token = localStorage.getItem("token"); // Luăm token-ul salvat la login
+            const response = await fetch("http://localhost:8000/api/admin/stats", {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setStats(data);
+            } else {
+                toast.error(data.error || "Eroare la încărcarea statisticilor");
+            }
+        } catch (error) {
+            toast.error("Nu s-a putut conecta la server");
+        } finally {
+            setLoading(false);
+        }
+    };
     const isAdmin = user?.email === "test@gmail.com" || user?.role === "admin";
 
     const renderContent = () => {
@@ -94,16 +127,63 @@ export default function Account() {
                         <p>Here you can change your password.</p>
                     </div>
                 );
-                case "admin":
+case "admin":
                 return (
-                    <div className="tab-content">
+                    <div className="tab-content admin-dashboard">
                         <h2>Admin Dashboard</h2>
-                        <div className="admin-stats">
-                            <div className="stat-card">Total Orders: 42</div>
-                            <div className="stat-card">New Users: 12</div>
-                        </div>
-                        <p>Manage products and view all transactions here.</p>
                         
+                        {loading && <p>Se încarcă datele...</p>}
+
+                        {stats && (
+                            <>
+                                {/* Carduri Statistice Rapide */}
+                                <div className="admin-stats-grid">
+                                    <div className="stat-card">
+                                        <h4>Total Revenue</h4>
+                                        <p className="stat-value">{stats.summary.totalRevenue} RON</p>
+                                    </div>
+                                    <div className="stat-card">
+                                        <h4>Total Orders</h4>
+                                        <p className="stat-value">{stats.summary.totalOrders}</p>
+                                    </div>
+                                    <div className="stat-card">
+                                        <h4>New Users (30d)</h4>
+                                        <p className="stat-value">{stats.summary.newUsers}</p>
+                                    </div>
+                                </div>
+
+                                <div className="charts-container">
+                                    {/* Grafic Evoluție Vânzări */}
+                                    <div className="chart-item">
+                                        <h3>Sales Trend (Last 7 Days)</h3>
+                                        <ResponsiveContainer width="100%" height={300}>
+                                            <LineChart data={stats.salesTrend}>
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="date" />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend />
+                                                <Line type="monotone" dataKey="revenue" stroke="#d9534f" strokeWidth={3} name="Revenue (RON)" />
+                                            </LineChart>
+                                        </ResponsiveContainer>
+                                    </div>
+
+                                    {/* Grafic Top Produse */}
+                                    <div className="chart-item">
+                                        <h3>Top 5 Best Selling Products</h3>
+                                        <ResponsiveContainer width="100%" height={300}>
+                                            <BarChart data={stats.topProducts}>
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="name" />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Bar dataKey="value" fill="#4285f4" name="Orders" />
+                                            </BarChart>
+                                        </ResponsiveContainer>
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 );
             default:

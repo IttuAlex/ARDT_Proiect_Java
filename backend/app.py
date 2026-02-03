@@ -311,5 +311,55 @@ def create_order(current_user):
     except Exception as e:
         return jsonify({"error": "Eroare comanda"}), 500
 
+@app.get("/api/admin/stats")
+@token_required
+def get_admin_stats(current_user):
+    try:
+        # --- 1. Calculăm Venituri și Nr. Comenzi ---
+        pipeline_sum = [
+            {"$group": {"_id": None, "rev": {"$sum": "$total_price"}, "count": {"$sum": 1}}}
+        ]
+        sum_res = list(orders.aggregate(pipeline_sum))
+        summary = sum_res[0] if sum_res else {"rev": 0, "count": 0}
+
+        # --- 2. Numărăm Userii Noi (ultimele 30 zile) ---
+        thirty_days = datetime.datetime.utcnow() - datetime.timedelta(days=30)
+        new_u = users.count_documents({"register_time": {"$gte": thirty_days}})
+
+        # --- 3. Top 5 Produse ---
+        pipeline_p = [
+            {"$unwind": "$items"},
+            {"$group": {"_id": "$items.name", "val": {"$sum": 1}}},
+            {"$sort": {"val": -1}}, 
+            {"$limit": 5}
+        ]
+        top_p = [{"name": p["_id"], "value": p["val"]} for p in orders.aggregate(pipeline_p)]
+
+        # --- 4. Trend Vânzări (ultimele 7 zile) ---
+        seven_days = datetime.datetime.utcnow() - datetime.timedelta(days=7)
+        pipeline_t = [
+            {"$match": {"created_at": {"$gte": seven_days}}},
+            {"$group": {
+                "_id": {"$dateToString": {"format": "%Y-%m-%d", "date": "$created_at"}}, 
+                "total": {"$sum": "$total_price"}
+            }},
+            {"$sort": {"_id": 1}}
+        ]
+        trend = [{"date": t["_id"], "revenue": round(t["total"], 2)} for t in orders.aggregate(pipeline_t)]
+
+        return jsonify({
+            "summary": {
+                "totalRevenue": round(summary.get("rev", 0), 2), 
+                "totalOrders": summary.get("count", 0), 
+                "newUsers": new_u
+            },
+            "topProducts": top_p,
+            "salesTrend": trend
+        }), 200
+
+    except Exception as e:
+        print(f"Eroare Stats: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
